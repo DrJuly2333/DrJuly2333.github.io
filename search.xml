@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Typora使用教程</title>
+    <url>/2024/07/24/Typora%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<h2 id="一、Typora安装"><a href="#一、Typora安装" class="headerlink" title="一、Typora安装"></a>一、Typora安装</h2><h4 id="1、下载"><a href="#1、下载" class="headerlink" title="1、下载"></a>1、下载</h4><p>Typora中文官网：<a href="https://typoraio.cn/">https://typoraio.cn/</a><br>Typora官网：<a href="https://typora.io/releases/all">https://typora.io/releases/all</a></p>
+<p><strong>2、激活</strong></p>
+<ol>
+<li>用编辑器打开<code>D:\Program Files\Typora\resources\page-dist\static\js\LicenseIndex.180dd4c7.4da8909c.chunk.js</code>，将 <code>e.hasActivated=&quot;true&quot;==e.hasActivated</code>  替换为 <code>e.hasActivated=&quot;true&quot;==&quot;true&quot;</code></li>
+<li>关闭软件每次启动时的已激活弹窗，用编辑器打开<code>D:\Program Files\Typora\resources\page-dist\license.html</code>，将  <code>&lt;/body&gt;&lt;/html&gt;</code> 替换为 <code>&lt;/body&gt;&lt;script&gt;window.οnlοad=function()&#123;setTimeout(()=&gt;&#123;window.close();&#125;,5);&#125;&lt;/script&gt;&lt;/html&gt;</code></li>
+<li>去除左下角软件未激活提示，用编辑器打开<code>D:\Program Files\Typora\resources\locales\zh-Hans.lproj\Panel.json</code>，将 <code>&quot;UNREGISTERED&quot;:&quot;未激活&quot;</code> 替换为 <code>&quot;UNREGISTERED&quot;:&quot; &quot;</code>，激活成功。</li>
+</ol>
+<h2 id="二、常用快捷键"><a href="#二、常用快捷键" class="headerlink" title="二、常用快捷键"></a>二、常用快捷键</h2><table>
+<thead>
+<tr>
+<th align="left">快捷键</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>ctrl + /</code></td>
+<td align="left">切换 源代码模式&#x2F;预览模式</td>
+</tr>
+<tr>
+<td align="left"><code>ctrl + 1 ~6</code></td>
+<td align="left">一 ~ 六级标题，最多六级标题</td>
+</tr>
+<tr>
+<td align="left"><code>ctrl + B</code></td>
+<td align="left">粗体</td>
+</tr>
+<tr>
+<td align="left"><code>ctrl + i 斜体</code></td>
+<td align="left">斜体</td>
+</tr>
+<tr>
+<td align="left"><code>ctrl + T</code></td>
+<td align="left">表格</td>
+</tr>
+<tr>
+<td align="left">&#96;&#96;&#96;&#96; + Enter<code>或</code>Ctrl + Shift + k&#96;</td>
+<td align="left">代码块</td>
+</tr>
+<tr>
+<td align="left"><code>&gt; + 空格</code></td>
+<td align="left">引用</td>
+</tr>
+<tr>
+<td align="left"><code>\ + 字符</code></td>
+<td align="left">转义</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + u</code></td>
+<td align="left">下划线</td>
+</tr>
+<tr>
+<td align="left"><code>alt + shift + 5</code> 或 <code>~~内容~~</code></td>
+<td align="left">删除线</td>
+</tr>
+<tr>
+<td align="left"><code>--- + Enter</code>  或 <code>*** + Enter</code></td>
+<td align="left">分割线</td>
+</tr>
+<tr>
+<td align="left"><code>- + 空格</code> 或 <code>* + 空格</code> 或 <code>Ctrl + Shift + ]</code></td>
+<td align="left">无序列表</td>
+</tr>
+<tr>
+<td align="left"><code>数字 + . + 空格</code> 或 <code>Ctrl + Shift + [</code></td>
+<td align="left">有序列表</td>
+</tr>
+<tr>
+<td align="left"><code>[TOC] + Enter</code></td>
+<td align="left">生成目录</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + L</code></td>
+<td align="left">选中一整行</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + d</code></td>
+<td align="left">选中单词</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + e</code></td>
+<td align="left">选中相同格式的文字(例如：加粗、斜体)</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + home</code></td>
+<td align="left">跳转到文章开头</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + end</code></td>
+<td align="left">跳转到文章结尾</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + f</code></td>
+<td align="left">搜索</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + h</code></td>
+<td align="left">替换</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + k</code></td>
+<td align="left">插入链接</td>
+</tr>
+<tr>
+<td align="left"><code>$$ + Enter</code></td>
+<td align="left">数学公式</td>
+</tr>
+<tr>
+<td align="left"><code>: + 单词 + :</code></td>
+<td align="left">表情（<a href="https://www.webfx.com/tools/emoji-cheat-sheet/">常用表情</a>）:coffee:</td>
+</tr>
+<tr>
+<td align="left"><code>直接拖动到指定位置</code> 或 <code>Ctrl + Shift + i</code></td>
+<td align="left">插入图片（图片可以直接拖进来，但是图片是相对路径，只能在本地使用，如果要放到博客中，要用绝对路径）</td>
+</tr>
+<tr>
+<td align="left"><code>&lt;sub&gt;内容&lt;/sub&gt;</code></td>
+<td align="left"><sub>下标</sub></td>
+</tr>
+<tr>
+<td align="left"><code>&lt;sup&gt;内容&lt;/sup&gt;</code></td>
+<td align="left"><sup>上标</sup></td>
+</tr>
+<tr>
+<td align="left"><code> [+^+脚注]</code></td>
+<td align="left">[^脚注] （<strong>最前面有个空格</strong>）</td>
+</tr>
+<tr>
+<td align="left"><code>==内容==</code></td>
+<td align="left">&#x3D;&#x3D;高亮&#x3D;&#x3D;</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + Shift + </code> &#96;</td>
+<td align="left">着重</td>
+</tr>
+<tr>
+<td align="left"><del><code>+ 内容 +</code></del></td>
+<td align="left"><del>淡化</del></td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + \</code></td>
+<td align="left">清除格式</td>
+</tr>
+<tr>
+<td align="left"><code>&lt;center&gt;+居中内容+&lt;center&gt;</code></td>
+<td align="left">居中</td>
+</tr>
+<tr>
+<td align="left"><code>&lt;p align=&quot;right&quot;&gt;右对齐&lt;/p&gt;</code></td>
+<td align="left">右对齐</td>
+</tr>
+<tr>
+<td align="left"><code>&lt;p align=&quot;left&quot;&gt;左对齐&lt;/p&gt;</code></td>
+<td align="left">左对齐</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">操作相关</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + N</code></td>
+<td align="left">新建</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + Shift + N</code></td>
+<td align="left">新建窗口</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + O</code></td>
+<td align="left">打开</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + P</code></td>
+<td align="left">快速打开</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + S</code></td>
+<td align="left">保存</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + Shift + S</code></td>
+<td align="left">另存为</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + W</code></td>
+<td align="left">关闭</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + Z</code></td>
+<td align="left">撤销</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + Y</code></td>
+<td align="left">重做</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl+Shift+C</code></td>
+<td align="left">复制为<code>MarkDown</code></td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl+Shift+V</code></td>
+<td align="left">粘贴为纯文本</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl+Shift+1</code></td>
+<td align="left">大纲视图</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl+Shift+2</code></td>
+<td align="left">文档列表视图</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl+Shift+3</code></td>
+<td align="left">文件树视图</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl+Shift+L</code></td>
+<td align="left">显示隐藏侧边栏</td>
+</tr>
+<tr>
+<td align="left"><code>F8</code></td>
+<td align="left">专注模式</td>
+</tr>
+<tr>
+<td align="left"><code>F9</code></td>
+<td align="left">打字机模式</td>
+</tr>
+<tr>
+<td align="left"><code>F11</code></td>
+<td align="left">切换全屏</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl+Shift+0</code></td>
+<td align="left">实际大小</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl + Shift+ +/-</code></td>
+<td align="left">放大&#x2F;缩小</td>
+</tr>
+<tr>
+<td align="left"><code>Ctrl+Tab</code></td>
+<td align="left">应用内窗口切换</td>
+</tr>
+<tr>
+<td align="left"><code>Shift+F12</code></td>
+<td align="left">打开<code>DevTools</code></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h2 id="三、-生成pdf、html等文件"><a href="#三、-生成pdf、html等文件" class="headerlink" title="三、 生成pdf、html等文件"></a>三、 生成pdf、html等文件</h2><p>文件→导出→选择要导出文件的格式</p>
+<h2 id="四、画图"><a href="#四、画图" class="headerlink" title="四、画图"></a>四、画图</h2><p><a href="https://blog.csdn.net/whatday/article/details/88655461">markdown 画图_markdown graph subgraph-CSDN博客</a></p>
+<ol>
+<li><p>graph 流程图</p>
+<ul>
+<li><code>TB</code>：从上到下</li>
+<li><code>TD</code>：从上到下</li>
+<li><code>BT</code>：从下到上</li>
+<li><code>RL</code>：从右到左</li>
+<li><code>LR</code>：从左到右</li>
+</ul>
+<p><strong>节点形状</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">默认节点 A</span><br><span class="line">文本节点 B[bname]</span><br><span class="line">圆角节点 C(cname)</span><br><span class="line">圆形节点 D((dname))</span><br><span class="line">非对称节点 E&gt;ename]</span><br><span class="line">菱形节点 F&#123;fname&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p> A~F 是当前节点名字，类似于变量名，画图时便于引用</p>
+</blockquote>
+<blockquote>
+<p> [b~f]name是节点中显示的文字，默认节点的名字和显示的文字都为A</p>
+</blockquote>
+   <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">	A--&gt;B[文本]</span><br><span class="line">	B[文本]--&gt;C(圆角)</span><br><span class="line">	C(圆角)--&gt;D((圆形))</span><br><span class="line">	D((圆形))--&gt;E&gt;非对称节点]</span><br><span class="line">	E&gt;非对称节点]--&gt;F&#123;菱形&#125;</span><br><span class="line">	F&#123;菱形&#125;--&gt;A</span><br></pre></td></tr></table></figure>
+
+<p><strong>连线</strong></p>
+<p>节点间的连接线有多种形状，可以在连接线中加入标签：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">箭头连接 A1–-&gt;B1</span><br><span class="line">开放连接 A2—B2</span><br><span class="line">标签连接 A3–text—B3</span><br><span class="line">箭头标签连接 A4–text–&gt;B4</span><br><span class="line">虚线开放连接 A5.-B5</span><br><span class="line">虚线箭头连接 A6-.-&gt;B6</span><br><span class="line">标签虚线连接 A7-.text.-B7</span><br><span class="line">标签虚线箭头连接 A8-.text.-&gt;B8</span><br><span class="line">粗线开放连接 A9===B9</span><br><span class="line">粗线箭头连接 A10==&gt;B10</span><br><span class="line">标签粗线开放连接 A11==text===B11</span><br><span class="line">标签粗线箭头连接 A12==text==&gt;B12</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">graph TB</span><br><span class="line">  A1--&gt;B1</span><br><span class="line">  A2---B2</span><br><span class="line">  A3--text---B3</span><br><span class="line">  A4--text--&gt;B4</span><br><span class="line">  A5-.-B5</span><br><span class="line">  A6-.-&gt;B6</span><br><span class="line">  A7-.text.-B7</span><br><span class="line">  A8-.text.-&gt;B8</span><br><span class="line">  A9===B9</span><br><span class="line">  A10==&gt;B10</span><br><span class="line">  A11==text===B11</span><br><span class="line">  A12==text==&gt;B12</span><br></pre></td></tr></table></figure>
+
+<p>例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">graph LR</span><br><span class="line">  start(&quot;input x&quot;) --&gt; handler(&quot;x &gt; 0?&quot;)</span><br><span class="line">  handler --yes--&gt; yes(&quot;output x&quot;)</span><br><span class="line">  handler --no--&gt; start</span><br><span class="line">  yes --&gt; exit(&quot;exit&quot;)</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+<li><p>flow 流程图</p>
+<p><strong>关键字</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">start/end，表示程序的开始与结束</span><br><span class="line">operation，表示程序的处理块</span><br><span class="line">subroutine，表示子程序块</span><br><span class="line">condition，表示程序的条件判断</span><br><span class="line">inputoutput，表示程序的出入输出</span><br><span class="line">right/left，表示当前连线在当前模块上的起点(默认从下端开始)</span><br><span class="line">yes/no， 表示condition判断的分支(可以和right，left同时使用)</span><br></pre></td></tr></table></figure>
+
+<p>通过定义模块与连接，再结合以上关键词即可定义简单流程图的各个模块。</p>
+<p>模块定义(模块标识与模块名称可以任意定义名称，但是不能为关键词)：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">模块标识(相当于变量名)=&gt;模块关键词: 模块名称(模块中显示的文字)</span><br></pre></td></tr></table></figure>
+
+<p>连接定义如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">模块标识1-&gt;模块标识2</span><br><span class="line">模块标识1-&gt;模块标识2-&gt;模块标识3</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>进行连接的时候，可以通过<code>right</code>，<code>left</code>确定箭头的起点。</p>
+<p>使用<code>condition</code>关键词定义的判断框的连接需要结合yes或者no使用，如</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cond1=&gt;condition: x&gt;0?</span><br><span class="line">cond1(yes)-&gt;module1</span><br><span class="line">cond1(no)-&gt;moudle2</span><br><span class="line"> </span><br><span class="line"># 指定方向,如果后面占用了这个方向, 前面的无效   </span><br><span class="line">cond1(yes,right)-&gt;module1</span><br><span class="line">cond1(no)-&gt;moudle2</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"># 先自定义变量,然后画图</span><br><span class="line">st=&gt;start: 开始</span><br><span class="line">e=&gt;end: 结束</span><br><span class="line">op=&gt;operation: 输入x</span><br><span class="line">sub=&gt;subroutine: 是否重新输入</span><br><span class="line">cond1=&gt;condition: x&gt;0?</span><br><span class="line">cond2=&gt;condition: yes/no </span><br><span class="line">io=&gt;inputoutput: 输出x  </span><br><span class="line"> </span><br><span class="line">st(right)-&gt;op-&gt;cond1</span><br><span class="line">cond1(yes)-&gt;io(right)-&gt;e</span><br><span class="line">cond1(no)-&gt;sub(right)-&gt;cond2()</span><br><span class="line">cond2(yes, right)-&gt;op</span><br><span class="line">cond2(no)-&gt;e</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">st=&gt;start: 开始</span><br><span class="line">e=&gt;end: 结束</span><br><span class="line">op=&gt;operation: 输入x</span><br><span class="line">sub=&gt;subroutine: 是否重新输入</span><br><span class="line">cond1=&gt;condition: x&gt;0?</span><br><span class="line">cond2=&gt;condition: yes/no </span><br><span class="line">io=&gt;inputoutput: 输出x  </span><br><span class="line"> </span><br><span class="line">st(right)-&gt;op-&gt;cond1</span><br><span class="line">cond1(yes)-&gt;io(right)-&gt;e</span><br><span class="line">cond1(no)-&gt;sub(right)-&gt;cond2()</span><br><span class="line">cond2(yes, right)-&gt;op</span><br><span class="line">cond2(no)-&gt;e</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li></li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2024/07/23/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+</search>
