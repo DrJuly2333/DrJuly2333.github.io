@@ -567,16 +567,39 @@
 <blockquote>
 <p> [b~f]name是节点中显示的文字，默认节点的名字和显示的文字都为A</p>
 </blockquote>
-   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">	A--&gt;B[文本]</span><br><span class="line">	B[文本]--&gt;C(圆角)</span><br><span class="line">	C(圆角)--&gt;D((圆形))</span><br><span class="line">	D((圆形))--&gt;E&gt;非对称节点]</span><br><span class="line">	E&gt;非对称节点]--&gt;F&#123;菱形&#125;</span><br><span class="line">	F&#123;菱形&#125;--&gt;A</span><br></pre></td></tr></table></figure>
+   <pre class="mermaid">      graph LR;
+       A-->B[文本]
+       B[文本]-->C(圆角)
+       C(圆角)-->D((圆形))
+       D((圆形))-->E>非对称节点]
+       E>非对称节点]-->F{菱形}
+       F{菱形}-->A</pre>
 
 <p><strong>连线</strong></p>
 <p>节点间的连接线有多种形状，可以在连接线中加入标签：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">箭头连接 A1–-&gt;B1</span><br><span class="line">开放连接 A2—B2</span><br><span class="line">标签连接 A3–text—B3</span><br><span class="line">箭头标签连接 A4–text–&gt;B4</span><br><span class="line">虚线开放连接 A5.-B5</span><br><span class="line">虚线箭头连接 A6-.-&gt;B6</span><br><span class="line">标签虚线连接 A7-.text.-B7</span><br><span class="line">标签虚线箭头连接 A8-.text.-&gt;B8</span><br><span class="line">粗线开放连接 A9===B9</span><br><span class="line">粗线箭头连接 A10==&gt;B10</span><br><span class="line">标签粗线开放连接 A11==text===B11</span><br><span class="line">标签粗线箭头连接 A12==text==&gt;B12</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">  A1--&gt;B1</span><br><span class="line">  A2---B2</span><br><span class="line">  A3--text---B3</span><br><span class="line">  A4--text--&gt;B4</span><br><span class="line">  A5-.-B5</span><br><span class="line">  A6-.-&gt;B6</span><br><span class="line">  A7-.text.-B7</span><br><span class="line">  A8-.text.-&gt;B8</span><br><span class="line">  A9===B9</span><br><span class="line">  A10==&gt;B10</span><br><span class="line">  A11==text===B11</span><br><span class="line">  A12==text==&gt;B12</span><br></pre></td></tr></table></figure>
+<pre class="mermaid">   graph TB
+  A1-->B1
+  A2---B2
+  A3--text---B3
+  A4--text-->B4
+  A5-.-B5
+  A6-.->B6
+  A7-.text.-B7
+  A8-.text.->B8
+  A9===B9
+  A10==>B10
+  A11==text===B11
+  A12==text==>B12</pre>
 
 <p>例子：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">graph LR</span><br><span class="line">  start(&quot;input x&quot;) --&gt; handler(&quot;x &gt; 0?&quot;)</span><br><span class="line">  handler --yes--&gt; yes(&quot;output x&quot;)</span><br><span class="line">  handler --no--&gt; start</span><br><span class="line">  yes --&gt; exit(&quot;exit&quot;)</span><br></pre></td></tr></table></figure>
+<pre class="mermaid">   
+graph LR
+  start("input x") --> handler("x > 0?")
+  handler --yes--> yes("output x")
+  handler --no--> start
+  yes --> exit("exit")</pre>
 
 
 
@@ -598,13 +621,25 @@
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 先自定义变量,然后画图</span><br><span class="line">st=&gt;start: 开始</span><br><span class="line">e=&gt;end: 结束</span><br><span class="line">op=&gt;operation: 输入x</span><br><span class="line">sub=&gt;subroutine: 是否重新输入</span><br><span class="line">cond1=&gt;condition: x&gt;0?</span><br><span class="line">cond2=&gt;condition: yes/no </span><br><span class="line">io=&gt;inputoutput: 输出x  </span><br><span class="line"> </span><br><span class="line">st(right)-&gt;op-&gt;cond1</span><br><span class="line">cond1(yes)-&gt;io(right)-&gt;e</span><br><span class="line">cond1(no)-&gt;sub(right)-&gt;cond2()</span><br><span class="line">cond2(yes, right)-&gt;op</span><br><span class="line">cond2(no)-&gt;e</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">st=&gt;start: 开始</span><br><span class="line">e=&gt;end: 结束</span><br><span class="line">op=&gt;operation: 输入x</span><br><span class="line">sub=&gt;subroutine: 是否重新输入</span><br><span class="line">cond1=&gt;condition: x&gt;0?</span><br><span class="line">cond2=&gt;condition: yes/no </span><br><span class="line">io=&gt;inputoutput: 输出x  </span><br><span class="line"> </span><br><span class="line">st(right)-&gt;op-&gt;cond1</span><br><span class="line">cond1(yes)-&gt;io(right)-&gt;e</span><br><span class="line">cond1(no)-&gt;sub(right)-&gt;cond2()</span><br><span class="line">cond2(yes, right)-&gt;op</span><br><span class="line">cond2(no)-&gt;e</span><br></pre></td></tr></table></figure>
+<div id="flowchart-0" class="flow-chart"></div>
 
 
 </li>
 <li></li>
 </ol>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">   st=>start: 开始
+   e=>end: 结束
+   op=>operation: 输入x
+   sub=>subroutine: 是否重新输入
+   cond1=>condition: x>0?
+   cond2=>condition: yes/no 
+   io=>inputoutput: 输出x  
+    
+   st(right)->op->cond1
+   cond1(yes)->io(right)->e
+   cond1(no)->sub(right)->cond2()
+   cond2(yes, right)->op
+   cond2(no)->e</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script>
       
     </div>
 
