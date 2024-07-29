@@ -357,12 +357,9 @@ graph LR
    cond2(no)->e</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script>]]></content>
   </entry>
   <entry>
-    <title></title>
+    <title>Vim使用教程</title>
     <url>/2024/07/29/Vim%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[<hr>
-<p>title: Vim使用教程<br>date: 2024-07-29 18:45:32<br>tag: Vim</p>
-<hr>
-<p>[TOC] </p>
+    <content><![CDATA[<p>[TOC] </p>
 <h2 id="Vim使用教程"><a href="#Vim使用教程" class="headerlink" title="Vim使用教程"></a>Vim使用教程</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><p>一款高度可配置的文本编辑器。</p>
 <h3 id="Vim模式"><a href="#Vim模式" class="headerlink" title="Vim模式"></a><strong>Vim模式</strong></h3><h4 id="1、常规模式"><a href="#1、常规模式" class="headerlink" title="1、常规模式"></a><strong>1、常规模式</strong></h4><p>启动编辑器时默认就处于此模式，以下是一些可以在常规模式下使用到的基本命令：</p>
 <ul>
