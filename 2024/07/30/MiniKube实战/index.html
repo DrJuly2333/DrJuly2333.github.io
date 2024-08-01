@@ -22,30 +22,32 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="一个练习两年半的实习生">
-<meta property="og:type" content="website">
-<meta property="og:title" content="DrJuly2333‘s Blog">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="前置工作1、卸载宝塔面板（可选）1234下载脚本wget http:&#x2F;&#x2F;download.bt.cn&#x2F;install&#x2F;bt-uninstall.sh执行脚本sh bt-uninstall.sh  2、安装docker 先删除本机旧的或者残留的docker  12345678sudo yum remove docker \                docker-client \">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes实战">
+<meta property="og:url" content="http://example.com/2024/07/30/MiniKube%E5%AE%9E%E6%88%98/index.html">
 <meta property="og:site_name" content="DrJuly2333‘s Blog">
-<meta property="og:description" content="一个练习两年半的实习生">
+<meta property="og:description" content="前置工作1、卸载宝塔面板（可选）1234下载脚本wget http:&#x2F;&#x2F;download.bt.cn&#x2F;install&#x2F;bt-uninstall.sh执行脚本sh bt-uninstall.sh  2、安装docker 先删除本机旧的或者残留的docker  12345678sudo yum remove docker \                docker-client \">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-07-30T08:03:35.000Z">
+<meta property="article:modified_time" content="2024-08-01T09:11:14.000Z">
 <meta property="article:author" content="Dr July">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2024/07/30/MiniKube%E5%AE%9E%E6%88%98/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>DrJuly2333‘s Blog</title>
+  <title>Kubernetes实战 | DrJuly2333‘s Blog</title>
   
 
 
@@ -186,9 +188,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -204,10 +207,9 @@
       <meta itemprop="name" content="DrJuly2333‘s Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/07/30/MiniKube%E5%AE%9E%E6%88%98/" class="post-title-link" itemprop="url">Kubernetes实战</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Kubernetes实战
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -237,7 +239,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="前置工作"><a href="#前置工作" class="headerlink" title="前置工作"></a>前置工作</h3><h4 id="1、卸载宝塔面板（可选）"><a href="#1、卸载宝塔面板（可选）" class="headerlink" title="1、卸载宝塔面板（可选）"></a>1、卸载宝塔面板（可选）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">下载脚本</span><br><span class="line">wget http://download.bt.cn/install/bt-uninstall.sh</span><br><span class="line">执行脚本</span><br><span class="line">sh bt-uninstall.sh</span><br></pre></td></tr></table></figure>
+        <h3 id="前置工作"><a href="#前置工作" class="headerlink" title="前置工作"></a>前置工作</h3><h4 id="1、卸载宝塔面板（可选）"><a href="#1、卸载宝塔面板（可选）" class="headerlink" title="1、卸载宝塔面板（可选）"></a>1、卸载宝塔面板（可选）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">下载脚本</span><br><span class="line">wget http://download.bt.cn/install/bt-uninstall.sh</span><br><span class="line">执行脚本</span><br><span class="line">sh bt-uninstall.sh</span><br></pre></td></tr></table></figure>
 
 <h4 id="2、安装docker"><a href="#2、安装docker" class="headerlink" title="2、安装docker"></a>2、安装docker</h4><ul>
 <li>先删除本机旧的或者残留的docker</li>
@@ -482,776 +484,30 @@
 <h3 id="部署应用"><a href="#部署应用" class="headerlink" title="部署应用"></a>部署应用</h3><h4 id="nginx部署"><a href="#nginx部署" class="headerlink" title="nginx部署"></a>nginx部署</h4><p>使用 <code>kubectl create</code> 命令创建管理 Pod 的 Deployment。该 Pod 根据提供的 Docker 镜像运行 Container</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 需要先拉取nginx镜像</span></span><br><span class="line">$ docker pull nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行一个名称为 hello-nginx 的 pod 作为 nginx 镜像的 Deployment</span></span><br><span class="line">$ kubectl create deployment hello-nginx --image=nginx:latest</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 Deployment</span></span><br><span class="line">kubectl get deployments</span><br><span class="line"><span class="comment"># 删除 Deployment</span></span><br><span class="line"><span class="comment"># kubectl delete -n default deployment hello-nginx</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 Pod</span></span><br><span class="line">kubectl get pods</span><br><span class="line"><span class="comment"># 删除 Pod</span></span><br><span class="line"><span class="comment"># kubectl delete -n default pod hello-nginx-557d767db6-zgtjf</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看集群事件</span></span><br><span class="line">kubectl get events</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 kubectl 配置</span></span><br><span class="line">kubectl config view</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/07/29/Vim%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Dr July">
-      <meta itemprop="description" content="一个练习两年半的实习生">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DrJuly2333‘s Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/07/29/Vim%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">Vim使用教程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-07-29 18:15:32 / 修改时间：19:02:24" itemprop="dateCreated datePublished" datetime="2024-07-29T18:15:32+08:00">2024-07-29</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>[TOC] </p>
-<h2 id="Vim使用教程"><a href="#Vim使用教程" class="headerlink" title="Vim使用教程"></a>Vim使用教程</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><p>一款高度可配置的文本编辑器。</p>
-<h3 id="Vim模式"><a href="#Vim模式" class="headerlink" title="Vim模式"></a><strong>Vim模式</strong></h3><h4 id="1、常规模式"><a href="#1、常规模式" class="headerlink" title="1、常规模式"></a><strong>1、常规模式</strong></h4><p>启动编辑器时默认就处于此模式，以下是一些可以在常规模式下使用到的基本命令：</p>
-<ul>
-<li><strong>移动</strong>：<ul>
-<li>方向键</li>
-<li><code>h</code> ：左</li>
-<li><code>l</code>  ：右</li>
-<li><code>j</code>  ：下</li>
-<li><code>k</code> ：上</li>
-</ul>
-</li>
-<li><strong>插入：</strong><ul>
-<li><code>i</code> ：在光标处插入文本</li>
-<li><code>a</code> ：在光标后插入文本</li>
-<li><code>A</code> ：在行尾开始插入文本</li>
-<li><code>I</code> ： 在行首插入文本</li>
-<li><code>o</code> ：在当前行后插入一个新行</li>
-<li><code>O</code> ：在当前行前插入一个新行</li>
-</ul>
-</li>
-<li><strong>删除：</strong><ul>
-<li><code>x</code> ：删除光标处的文本</li>
-<li><code>X</code> ：删除光标前的一个文本，相当于<code>BackSpace</code>键</li>
-</ul>
-</li>
-<li><strong>修改：</strong><ul>
-<li><code>r</code> ：替换光标处文本</li>
-<li><code>R</code> ：使用寄存器替换光标处文本，可以修改光标后的文本，相当于<code>Insert</code>键</li>
-</ul>
-</li>
-<li><strong>复制和粘贴：</strong><ul>
-<li><code>yy</code> ：将文本剪切到剪贴板</li>
-<li><code>Y</code>：将一行文本剪切到剪贴板</li>
-<li><code>p</code> ：在当前行前粘贴剪贴板的文本</li>
-<li><code>P</code>：在当前行后粘贴剪贴板的文本</li>
-</ul>
-</li>
-<li><strong>其他：</strong><ul>
-<li>. ：重复上一个命令</li>
-<li>$ ：移至行尾</li>
-<li>^ ：移至行首</li>
-</ul>
-</li>
-<li></li>
-<li></li>
-</ul>
-<h4 id="2、可视模式"><a href="#2、可视模式" class="headerlink" title="2、可视模式"></a>2、<strong>可视模式</strong></h4><p>按<code>v</code>键进入可视模式，以下是在可视模式中可以使用的一些基本命令：</p>
-<ul>
-<li><strong>选择：</strong><ul>
-<li>方向键</li>
-<li><code>h</code>：左</li>
-<li><code>l</code>：右</li>
-<li><code>j</code>：下</li>
-<li><code>k</code>：上</li>
-<li><code>V</code>：选择行</li>
-<li><code>v</code>：选择字符</li>
-</ul>
-</li>
-<li><strong>删除：</strong><ul>
-<li><code>x</code> ：删除选定的文本</li>
-<li><code>X</code> ：删除光标所在行</li>
-</ul>
-</li>
-<li><strong>复制和粘贴：</strong><ul>
-<li><code>y</code> ：复制选定的文本</li>
-<li><code>Y</code> ：复制一整行文本</li>
-<li><code>p</code> ：在当前行之前粘贴剪贴板中的文本</li>
-<li><code>P</code> ：在当前行之后粘贴剪贴板中的文本</li>
-</ul>
-</li>
-<li>其他：<ul>
-<li><code>.</code> ：重复上一个命令</li>
-<li><code>G</code> ：移至文件末尾</li>
-<li><code>gg</code> ：移至文件开头</li>
-<li><code>^</code> ：移至行首</li>
-<li><code>$</code> ：移至行尾</li>
-<li><code>%</code> ：更改后重复上一个命令</li>
-</ul>
-</li>
-</ul>
-<h4 id="3、选择模式"><a href="#3、选择模式" class="headerlink" title="3、选择模式"></a><strong>3、选择模式</strong></h4><p>选择模式看起来像可视模式，在最后一行会显示<code>– 选择 –</code>。</p>
-<p>进入选择模式：</p>
-<ul>
-<li>从可视化模式，按下 <code>CTRL + G</code>。</li>
-</ul>
-<p>以下是可以用于选择模式的一些基本命令：</p>
-<ul>
-<li>可打印字符、 和 会导致删除选定内容，Vim 进入插入模式。插入所键入字符。</li>
-<li>不可打印的移动命令，同时按下 Shift 键，会扩展所选内容。“keymodel”必须包含“startsel”。</li>
-<li>不可打印的移动命令，未按下 Shift 键，会停止选择模式。“keymodel”必须包含“stopsel”。</li>
-<li><code>CTRL + O</code> 在一个命令的持续时间内切换至可视化模式</li>
-<li><code>CTRL + G</code> 切换至可视模式。</li>
-</ul>
-<h4 id="4、插入模式"><a href="#4、插入模式" class="headerlink" title="4、插入模式"></a><strong>4、插入模式</strong></h4><p>按 <code>i</code> 键进入插入模式，在插入模式中可以<strong>添加</strong>新文本或<strong>修改</strong>文本。</p>
-<p>以下是一些可以在插入模式下使用到的基本命令：</p>
-<ul>
-<li>插入：<ul>
-<li><code>a</code> ：在光标后插入文本。</li>
-<li><code>A</code> ：在行尾开始插入文本。</li>
-<li><code>I</code> ：在行首插入文本。</li>
-<li><code>o</code> ：在当前行后插入一个新行。</li>
-<li><code>O</code> ：在当前行前插入一个新行。</li>
-</ul>
-</li>
-<li>其他：<ul>
-<li><code>Esc</code> ：退出插入模式并返回常规模式。</li>
-</ul>
-</li>
-</ul>
-<h4 id="5、命令模式"><a href="#5、命令模式" class="headerlink" title="5、命令模式"></a><strong>5、命令模式</strong></h4><p>按 <code>:</code> 键将进入命令模式，可以在其中输入 Vim 命令。</p>
-<p>以下是在命令模式中可以使用的一些基本命令：</p>
-<ul>
-<li><code>:w</code> ：在不退出 Vim 的情况下写入或保存文件</li>
-<li><code>:q</code> ：退出 Vim。如果有未保存的更改，系统会提示您放弃它们</li>
-<li><code>:q!</code>：不保存任何更改而退出 Vim</li>
-<li><code>:qa!</code> ： 退出所有窗口并放弃所有未保存的更改</li>
-<li><code>:e filename</code> ：打开一个新文件进行编辑</li>
-<li><code>:r filename</code> ：在光标位置读取或插入文件的内容</li>
-<li><code>/pattern</code> ：在文件中搜索模式。按 <code>n</code> 移动到模式的下一个出现处，按 <code>N</code> 移动到上一个出现处</li>
-<li><code>:set paste</code> ：进入粘贴模式，以防止从 Vim 外部粘贴文本时自动缩进</li>
-<li><code>:set number</code> 或 <code>:set nu</code> ：在左页边距显示行号</li>
-<li><code>:set spell</code> ：为当前文件启用拼写检查</li>
-<li><code>:set nospell</code> ：禁用拼写检查</li>
-<li><code>:s/old/new/g</code> ：将当前行中的所有<code>old</code>替换为<code>new</code>。使用计数，例如<code>:s/old/new/g 3</code>，以应用替换三次</li>
-<li><code>:g/pattern/d</code> ：删除所有与模式匹配的行</li>
-</ul>
-<h4 id="6-Ex-模式"><a href="#6-Ex-模式" class="headerlink" title="6. Ex 模式"></a>6. <strong>Ex 模式</strong></h4><p>按<code>Q</code>键将进入 ex 模式，可以在 ex 模式中执行 Vim 命令，命令执行后不会离开命令模式，可以继续输入命令并执行。</p>
-<h3 id="导航"><a href="#导航" class="headerlink" title="导航"></a><strong>导航</strong></h3><h4 id="在文件中移动"><a href="#在文件中移动" class="headerlink" title="在文件中移动"></a><strong>在文件中移动</strong></h4><ul>
-<li><code>h</code> ：光标向左移动</li>
-<li><code>l</code> ：光标向右移动</li>
-<li><code>j</code> ：光标向下移动</li>
-<li><code>k</code> ：光标向上移动</li>
-<li><code>0</code>（零）：将光标移到行首</li>
-<li><code>^</code> ：将光标移到该行的第一个非空白字符</li>
-<li><code>$</code> ：将光标移到该行的末尾</li>
-<li><code>g_</code> ：将光标移到该行的最后一个非空白字符</li>
-<li><code>G</code>：将光标移到文件的最后一行</li>
-<li><code>gg</code>：将光标移到文件的首行</li>
-<li><code>Ctrl + D</code> ：向下滚动半屏</li>
-<li><code>Ctrl + U</code> ：向上滚动半屏</li>
-<li><code>Ctrl + F</code> ：向前移动整个屏幕</li>
-<li><code>Ctrl + B</code> ：向后移动整个屏幕</li>
-<li><code>H</code> ：将光标移到屏幕顶部</li>
-<li><code>M</code> ：将光标移到屏幕中间</li>
-<li><code>L</code> ：将光标移到屏幕底部</li>
-</ul>
-<h4 id="跳转到特定行或单词"><a href="#跳转到特定行或单词" class="headerlink" title="跳转到特定行或单词"></a><strong>跳转到特定行或单词</strong></h4><ul>
-<li><code>10G</code> | <code>10gg</code> | <code>:10</code>：跳转到第 10 行</li>
-<li><code>*</code>：搜索光标下的单词</li>
-<li><code>#</code>：向后搜索光标下的单词</li>
-</ul>
-<h4 id="在搜索结果中移动"><a href="#在搜索结果中移动" class="headerlink" title="在搜索结果中移动"></a><strong>在搜索结果中移动</strong></h4><ul>
-<li><code>/foo</code> : 查找<code>foo</code></li>
-<li><code>n</code>：将光标移到下一个匹配项（向前）</li>
-<li><code>N</code>：将光标移到上一个匹配项（向后）</li>
-</ul>
-<h3 id="文本编辑"><a href="#文本编辑" class="headerlink" title="文本编辑"></a><strong>文本编辑</strong></h3><h4 id="插入和追加文本"><a href="#插入和追加文本" class="headerlink" title="插入和追加文本"></a><strong>插入和追加文本</strong></h4><ul>
-<li><code>i</code> ：在光标前插入文本</li>
-<li><code>I </code>：在行的开头插入文本</li>
-<li><code>a</code> ：在光标后追加文本</li>
-<li><code>A</code> ：在行的末尾追加文本</li>
-</ul>
-<h4 id="编辑行"><a href="#编辑行" class="headerlink" title="编辑行"></a><strong>编辑行</strong></h4><ul>
-<li><code>J</code> ：将当前行与下一行连接</li>
-<li><code>cc</code> | <code>S</code> ：更改整行内容（删除并进入插入模式）</li>
-<li><code>cw</code> ：更改光标下的单词（删除并进入插入模式）</li>
-<li><code>C</code> ：从光标位置更改剩余行（删除并进入插入模式）</li>
-<li><code>r</code> ：用另一个字符替换光标下的单个字符</li>
-<li><code>R</code> ：输入替换模式；替换多个字符，直到按 <code>Esc</code></li>
-<li><code>g~</code> ：反转光标下字符的大小写</li>
-</ul>
-<h4 id="删除文本"><a href="#删除文本" class="headerlink" title="删除文本"></a><strong>删除文本</strong></h4><ul>
-<li><code>x</code>：删除光标下的字符</li>
-<li><code>X</code>：删除光标前的字符</li>
-<li><code>dd</code>：删除整行</li>
-<li><code>D</code>：从光标位置删除剩余行（剪切），光标所在字符也会被删除</li>
-<li><code>cw</code>：更改光标下的单词（删除并进入插入模式）</li>
-</ul>
-<h4 id="复制和粘贴文本"><a href="#复制和粘贴文本" class="headerlink" title="复制和粘贴文本"></a><strong>复制和粘贴文本</strong></h4><ul>
-<li><code>yy</code>：将整行内容剪切（复制）到默认寄存器</li>
-<li><code>yw</code>：将光标下的单词剪切（复制）到默认寄存器</li>
-<li><code>p</code>：在光标位置前粘贴默认寄存器的内容</li>
-<li><code>P</code>：在光标位置后粘贴默认寄存器的内容</li>
-</ul>
-<h4 id="撤销和重做更改"><a href="#撤销和重做更改" class="headerlink" title="撤销和重做更改"></a><strong>撤销和重做更改</strong></h4><ul>
-<li><code>u</code>：撤销对文件进行的最后一次更改</li>
-<li><code>Ctrl + R</code> ：重做最后一次撤销的更改</li>
-</ul>
-<h3 id="搜索和替换文本"><a href="#搜索和替换文本" class="headerlink" title="搜索和替换文本"></a><strong>搜索和替换文本</strong></h3><h4 id="基本搜索命令"><a href="#基本搜索命令" class="headerlink" title="基本搜索命令"></a><strong>基本搜索命令</strong></h4><ul>
-<li><code>/foo</code>：<strong>向后</strong>搜索单词 <code>foo</code></li>
-<li><code>?bar</code>：<strong>向前</strong>搜索单词 <code>bar</code></li>
-<li><code>n</code>：搜索后将光标移至下一个匹配项</li>
-<li><code>N</code>：搜索后将光标移至上一个匹配项</li>
-</ul>
-<h4 id="高级搜索命令"><a href="#高级搜索命令" class="headerlink" title="高级搜索命令"></a><strong>高级搜索命令</strong></h4><ul>
-<li><code>:%s/foo/bar/g</code>：在整个文件中查找并用 <code>bar</code> 替换所有出现的 <code>foo</code></li>
-</ul>
-<h3 id="缩进和格式化"><a href="#缩进和格式化" class="headerlink" title="缩进和格式化"></a><strong>缩进和格式化</strong></h3><h4 id="调整缩进"><a href="#调整缩进" class="headerlink" title="调整缩进"></a><strong>调整缩进</strong></h4><ul>
-<li><code>&gt;&gt;</code>：将当前行或选定的行缩进一个制表符位（或移位宽度）</li>
-<li><code>&lt;&lt;</code>：将当前行或选定的行向外缩进一个制表符位（或移位宽度）</li>
-<li><code>==</code>：将当前行或选定的行缩进到正确的缩进级别</li>
-</ul>
-<h4 id="格式化段落和代码块"><a href="#格式化段落和代码块" class="headerlink" title="格式化段落和代码块"></a><strong>格式化段落和代码块</strong></h4><ul>
-<li><code>gqip</code>：格式化当前段落（两行空格之间的文本）</li>
-<li><code>=ap</code>：格式化选定的代码块</li>
-<li><code>gwap</code>：将选定的代码块与其镜像交换（例如，翻转函数体）</li>
-<li><code>gg=G</code>：格式化整个文件</li>
-</ul>
-<h3 id="代码折叠和切换"><a href="#代码折叠和切换" class="headerlink" title="代码折叠和切换"></a><strong>代码折叠和切换</strong></h3><h4 id="折叠和展开区域"><a href="#折叠和展开区域" class="headerlink" title="折叠和展开区域"></a><strong>折叠和展开区域</strong></h4><ul>
-<li><code>zf</code>：可视模式选择行，将当前行或选定的行折叠到区域中</li>
-<li><code>:10,20fold</code> ：折叠指定行范围的代码块</li>
-<li><code>za</code>：切换当前行的折叠状态（如果折叠，则打开；如果未折叠，则关闭）</li>
-<li><code>zM</code>：关闭当前缓冲区中的所有折叠</li>
-<li><code>zR</code>：打开当前缓冲区中的所有折叠</li>
-</ul>
-<h4 id="设置折叠级别"><a href="#设置折叠级别" class="headerlink" title="设置折叠级别"></a><strong>设置折叠级别</strong></h4><ul>
-<li><code>zm</code>：折叠级别减一（关闭折叠或打开更嵌套的折叠）</li>
-<li><code>zr</code>：折叠级别加一（打开折叠或创建新折叠）</li>
-</ul>
-<h3 id="缓冲区管理"><a href="#缓冲区管理" class="headerlink" title="缓冲区管理"></a><strong>缓冲区管理</strong></h3><h4 id="列出和切换缓冲区"><a href="#列出和切换缓冲区" class="headerlink" title="列出和切换缓冲区"></a><strong>列出和切换缓冲区</strong></h4><ul>
-<li><code>:ls</code>：列出当前 Vim 会话中的所有缓冲区</li>
-<li><code>:b foo</code>：切换到名为 <code>foo</code> 的缓冲区</li>
-<li><code>Ctrl+Shift+6</code> ：在最后使用过的两个缓冲区之间切换</li>
-</ul>
-<h4 id="分割和关闭窗口"><a href="#分割和关闭窗口" class="headerlink" title="分割和关闭窗口"></a><strong>分割和关闭窗口</strong></h4><ul>
-<li><code>:split</code> 或 <code>:sp</code>：在当前选项卡页中打开一个包含相同文件的新窗口</li>
-<li><code>:split path/to/another/file</code> ：在新窗口打开另一个文件</li>
-<li><code>:vsplit</code> 或 <code>:vsp</code>：在当前选项卡页中打开一个包含相同文件的新垂直窗口</li>
-<li><code>:vsplit path/to/another/file</code> ：在新窗口打开另一个文件</li>
-<li><code>Ctrl + W</code> <code>Ctrl + W</code>：切换窗口</li>
-<li><code>:q</code>：退出窗口</li>
-</ul>
-<h3 id="调整窗口大小"><a href="#调整窗口大小" class="headerlink" title="调整窗口大小"></a><strong>调整窗口大小</strong></h3><ul>
-<li><code>Ctrl + W +</code>：将当前窗口的高度增加一行</li>
-<li><code>Ctrl + W -</code>：将当前窗口的高度减少一行</li>
-<li><code>Ctrl + W &gt;</code>：将当前窗口的宽度增加一列</li>
-<li><code>Ctrl + W &lt;</code>：将当前窗口的宽度减少一列</li>
-<li><code>Ctrl + W =</code>：将当前窗口水平等分</li>
-<li><code>Ctrl + W |</code>：将当前窗口垂直等分</li>
-</ul>
-<h3 id="移动窗口"><a href="#移动窗口" class="headerlink" title="移动窗口"></a><strong>移动窗口</strong></h3><ul>
-<li><code>Ctrl + W + h</code>：将当前窗口移到左边</li>
-<li><code>Ctrl + W + j</code>：将当前窗口向下移动</li>
-<li><code>Ctrl + W + k</code>：将当前窗口向上移动</li>
-<li><code>Ctrl + W + l</code>：将当前窗口移到右边</li>
-</ul>
-<h3 id="窗口导航"><a href="#窗口导航" class="headerlink" title="窗口导航"></a><strong>窗口导航</strong></h3><ul>
-<li><code>Ctrl + W + p</code>：将光标移至前一个窗口（左或上）</li>
-<li><code>Ctrl + W + n</code>：将光标移至下一个窗口（右或下）</li>
-</ul>
-<h3 id="选项卡管理"><a href="#选项卡管理" class="headerlink" title="选项卡管理"></a><strong>选项卡管理</strong></h3><h4 id="打开、关闭和列出选项卡"><a href="#打开、关闭和列出选项卡" class="headerlink" title="打开、关闭和列出选项卡"></a><strong>打开、关闭和列出选项卡</strong></h4><ul>
-<li><code>:tabnew</code> 或 <code>:tabedit</code>：打开一个包含空缓冲区的选项卡</li>
-<li><code>:tabedit foo.txt</code>：打开一个包含文件 <code>foo.txt</code>的新选项卡</li>
-<li><code>:qa</code>：关闭当前 Vim 会话中的所有窗口和选项卡（或在退出前使用 <code>:wq</code> 保存更改）</li>
-<li><code>:lt</code>：列出当前 Vim 会话中的所有选项卡</li>
-</ul>
-<h4 id="在选项卡之间移动"><a href="#在选项卡之间移动" class="headerlink" title="在选项卡之间移动"></a><strong>在选项卡之间移动</strong></h4><ul>
-<li><code>Ctrl + W + T</code>：将当前窗口移至其自己的选项卡页</li>
-<li><code>gT</code>：将光标移至前一个选项卡页（左或上）</li>
-<li><code>gt</code>：将光标移至下一个选项卡页（右或下）</li>
-</ul>
-<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a><strong>文件操作</strong></h3><h4 id="打开和保存文件"><a href="#打开和保存文件" class="headerlink" title="打开和保存文件"></a><strong>打开和保存文件</strong></h4><ul>
-<li><code>:edit foo.txt</code>：打开一个包含文件 <code>foo.txt</code> 的新缓冲区</li>
-<li><code>:write</code> 或 <code>:w</code>：将当前缓冲区的内容保存到其关联的文件</li>
-<li><code>:qa</code>：退出当前 Vim 会话中的所有窗口和选项卡（或在退出前使用 <code>:wq</code> 保存更改）</li>
-</ul>
-<h3 id="使用不同文件分割窗口"><a href="#使用不同文件分割窗口" class="headerlink" title="使用不同文件分割窗口"></a><strong>使用不同文件分割窗口</strong></h3><ul>
-<li><code>:split foo.txt</code>：打开一个包含文件 <code>foo.txt</code>的新窗口</li>
-<li><code>:vsplit bar.txt</code>：打开一个包含文件 <code>bar.txt</code> 的新垂直窗口</li>
-</ul>
-<h2 id="插件安装"><a href="#插件安装" class="headerlink" title="插件安装"></a><strong>插件安装</strong></h2><p>安装vim-plug插件管理器</p>
-<p>在终端输入</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -fLo ~/.vim/autoload/plug.vim --create-dirs \</span><br><span class="line">    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim</span><br></pre></td></tr></table></figure>
-
-<p>这条命令会将 vim-plug 下载并安装到 <code>~/.vim/autoload/plug.vim</code> 中。</p>
-<p>配置：在你的 <code>~/.vimrc</code>（或 <code>~/.config/nvim/init.vim</code> 如果是 <code>Neovim</code>）文件中添加以下内容来配置 vim-plug：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot; vim-plug settings</span></span><br><span class="line"><span class="string">call plug#begin(&#x27;~/.vim/plugged&#x27;)</span></span><br><span class="line"><span class="string">&quot;</span> 插件列表</span><br><span class="line"><span class="string">&quot; 例如：Plug &#x27;junegunn/vim-easy-align&#x27;</span></span><br><span class="line"><span class="string">call plug#end()</span></span><br></pre></td></tr></table></figure>
-
-<p>在 <code>call plug#begin()</code> 和 <code>call plug#end()</code> 之间，列出你想安装的插件。每个插件由 <code>Plug &#39;github用户/仓库&#39;</code> 格式定义。</p>
-<p>在Vim运行以下命令安装插件：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:PlugInstall</span><br></pre></td></tr></table></figure>
-
-<p><strong>常用插件</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Nerdtree：一个在屏幕左侧添加文件树的插件，可以让你更轻松地浏览文件。</span><br><span class="line">Syntastic：一个为多种编程语言提供语法高亮的插件。</span><br><span class="line">Vim-Airline：一个高度可配置的 Vim 状态栏，易于自定义，可提高你的整体编辑效率。</span><br><span class="line">Nerd Commenter：这个插件可以帮助你轻松注释和取消注释各种编程语言中的代码行。</span><br><span class="line">FZF：一个命令行模糊查找器，具有语法高亮、键盘导航和文件过滤功能。</span><br><span class="line">YouCompleteMe：一个适用于 Vim 的快速按需代码补全引擎。</span><br><span class="line">Coc.nvim：一个语言服务器协议 (LSP) 插件，为许多热门编程语言提供 IntelliSense 功能，如自动完成和跳转到定义。</span><br><span class="line">Vim-Fugitive：这个插件允许你轻松地在 Vim 中管理 Git 存储库。</span><br><span class="line">Ale：一个与许多热门编程语言搭配使用的语法和样式检查器，可在键入时提供实时错误检查。</span><br><span class="line">Vim-surround：这个插件让你可以轻松处理文件中的文本周围成对的字符（如引号或括号）。</span><br><span class="line">Lightline：一个轻量级且可配置的 Vim 状态栏/选项卡栏插件。</span><br><span class="line">Vim-easymotion：EasyMotion 提供了一种更简单的方式来使用 vim 中的一些动作。它通过突出显示所有可能的选择并允许你按一个键直接跳转到目标来消除 w 或 f&#123;char&#125; 中的 。</span><br><span class="line">Vim-lsp：一个提供语言服务器协议支持的插件，让你可以使用高级语言特性，如代码补全和语法高亮。</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">call plug#begin(&#x27;~/.vim/plugged&#x27;)</span><br><span class="line">	Plug &#x27;preservim/nerdtree&#x27;</span><br><span class="line">	Plug &#x27;vim-syntastic/syntastic&#x27;</span><br><span class="line">	Plug &#x27;vim-airline/vim-airline&#x27;</span><br><span class="line">	Plug &#x27;preservim/nerdcommenter&#x27;</span><br><span class="line">	Plug &#x27;ycm-core/YouCompleteMe&#x27;</span><br><span class="line">	Plug &#x27;junegunn/vim-easy-align&#x27;</span><br><span class="line">	Plug &#x27;neoclide/coc.nvim&#x27;, &#123;&#x27;branch&#x27;: &#x27;release&#x27;&#125;</span><br><span class="line">call plug#end()</span><br></pre></td></tr></table></figure>
+        
 
 
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/07/29/Vim%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" rel="prev" title="Vim使用教程">
+      <i class="fa fa-chevron-left"></i> Vim使用教程
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/07/24/Typora%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Dr July">
-      <meta itemprop="description" content="一个练习两年半的实习生">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DrJuly2333‘s Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/07/24/Typora%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">Typora使用教程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-07-24 09:15:32 / 修改时间：14:24:39" itemprop="dateCreated datePublished" datetime="2024-07-24T09:15:32+08:00">2024-07-24</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、Typora安装"><a href="#一、Typora安装" class="headerlink" title="一、Typora安装"></a>一、Typora安装</h2><h4 id="1、下载"><a href="#1、下载" class="headerlink" title="1、下载"></a>1、下载</h4><p>Typora中文官网：<a target="_blank" rel="noopener" href="https://typoraio.cn/">https://typoraio.cn/</a><br>Typora官网：<a target="_blank" rel="noopener" href="https://typora.io/releases/all">https://typora.io/releases/all</a></p>
-<p><strong>2、激活</strong></p>
-<ol>
-<li>用编辑器打开<code>D:\Program Files\Typora\resources\page-dist\static\js\LicenseIndex.180dd4c7.4da8909c.chunk.js</code>，将 <code>e.hasActivated=&quot;true&quot;==e.hasActivated</code>  替换为 <code>e.hasActivated=&quot;true&quot;==&quot;true&quot;</code></li>
-<li>关闭软件每次启动时的已激活弹窗，用编辑器打开<code>D:\Program Files\Typora\resources\page-dist\license.html</code>，将  <code>&lt;/body&gt;&lt;/html&gt;</code> 替换为 <code>&lt;/body&gt;&lt;script&gt;window.οnlοad=function()&#123;setTimeout(()=&gt;&#123;window.close();&#125;,5);&#125;&lt;/script&gt;&lt;/html&gt;</code></li>
-<li>去除左下角软件未激活提示，用编辑器打开<code>D:\Program Files\Typora\resources\locales\zh-Hans.lproj\Panel.json</code>，将 <code>&quot;UNREGISTERED&quot;:&quot;未激活&quot;</code> 替换为 <code>&quot;UNREGISTERED&quot;:&quot; &quot;</code>，激活成功。</li>
-</ol>
-<h2 id="二、常用快捷键"><a href="#二、常用快捷键" class="headerlink" title="二、常用快捷键"></a>二、常用快捷键</h2><table>
-<thead>
-<tr>
-<th align="left">快捷键</th>
-<th align="left">作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>ctrl + /</code></td>
-<td align="left">切换 源代码模式&#x2F;预览模式</td>
-</tr>
-<tr>
-<td align="left"><code>ctrl + 1 ~6</code></td>
-<td align="left">一 ~ 六级标题，最多六级标题</td>
-</tr>
-<tr>
-<td align="left"><code>ctrl + B</code></td>
-<td align="left">粗体</td>
-</tr>
-<tr>
-<td align="left"><code>ctrl + i 斜体</code></td>
-<td align="left">斜体</td>
-</tr>
-<tr>
-<td align="left"><code>ctrl + T</code></td>
-<td align="left">表格</td>
-</tr>
-<tr>
-<td align="left">&#96;&#96;&#96;&#96; + Enter<code>或</code>Ctrl + Shift + k&#96;</td>
-<td align="left">代码块</td>
-</tr>
-<tr>
-<td align="left"><code>&gt; + 空格</code></td>
-<td align="left">引用</td>
-</tr>
-<tr>
-<td align="left"><code>\ + 字符</code></td>
-<td align="left">转义</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + u</code></td>
-<td align="left">下划线</td>
-</tr>
-<tr>
-<td align="left"><code>alt + shift + 5</code> 或 <code>~~内容~~</code></td>
-<td align="left">删除线</td>
-</tr>
-<tr>
-<td align="left"><code>--- + Enter</code>  或 <code>*** + Enter</code></td>
-<td align="left">分割线</td>
-</tr>
-<tr>
-<td align="left"><code>- + 空格</code> 或 <code>* + 空格</code> 或 <code>Ctrl + Shift + ]</code></td>
-<td align="left">无序列表</td>
-</tr>
-<tr>
-<td align="left"><code>数字 + . + 空格</code> 或 <code>Ctrl + Shift + [</code></td>
-<td align="left">有序列表</td>
-</tr>
-<tr>
-<td align="left"><code>[TOC] + Enter</code></td>
-<td align="left">生成目录</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + L</code></td>
-<td align="left">选中一整行</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + d</code></td>
-<td align="left">选中单词</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + e</code></td>
-<td align="left">选中相同格式的文字(例如：加粗、斜体)</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + home</code></td>
-<td align="left">跳转到文章开头</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + end</code></td>
-<td align="left">跳转到文章结尾</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + f</code></td>
-<td align="left">搜索</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + h</code></td>
-<td align="left">替换</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + k</code></td>
-<td align="left">插入链接</td>
-</tr>
-<tr>
-<td align="left"><code>$$ + Enter</code></td>
-<td align="left">数学公式</td>
-</tr>
-<tr>
-<td align="left"><code>: + 单词 + :</code></td>
-<td align="left">表情（<a target="_blank" rel="noopener" href="https://www.webfx.com/tools/emoji-cheat-sheet/">常用表情</a>）:coffee:</td>
-</tr>
-<tr>
-<td align="left"><code>直接拖动到指定位置</code> 或 <code>Ctrl + Shift + i</code></td>
-<td align="left">插入图片（图片可以直接拖进来，但是图片是相对路径，只能在本地使用，如果要放到博客中，要用绝对路径）</td>
-</tr>
-<tr>
-<td align="left"><code>&lt;sub&gt;内容&lt;/sub&gt;</code></td>
-<td align="left"><sub>下标</sub></td>
-</tr>
-<tr>
-<td align="left"><code>&lt;sup&gt;内容&lt;/sup&gt;</code></td>
-<td align="left"><sup>上标</sup></td>
-</tr>
-<tr>
-<td align="left"><code> [+^+脚注]</code></td>
-<td align="left">[^脚注] （<strong>最前面有个空格</strong>）</td>
-</tr>
-<tr>
-<td align="left"><code>==内容==</code></td>
-<td align="left">&#x3D;&#x3D;高亮&#x3D;&#x3D;</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + Shift + </code> &#96;</td>
-<td align="left">着重</td>
-</tr>
-<tr>
-<td align="left"><del><code>+ 内容 +</code></del></td>
-<td align="left"><del>淡化</del></td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + \</code></td>
-<td align="left">清除格式</td>
-</tr>
-<tr>
-<td align="left"><code>&lt;center&gt;+居中内容+&lt;center&gt;</code></td>
-<td align="left">居中</td>
-</tr>
-<tr>
-<td align="left"><code>&lt;p align=&quot;right&quot;&gt;右对齐&lt;/p&gt;</code></td>
-<td align="left">右对齐</td>
-</tr>
-<tr>
-<td align="left"><code>&lt;p align=&quot;left&quot;&gt;左对齐&lt;/p&gt;</code></td>
-<td align="left">左对齐</td>
-</tr>
-<tr>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">操作相关</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + N</code></td>
-<td align="left">新建</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + Shift + N</code></td>
-<td align="left">新建窗口</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + O</code></td>
-<td align="left">打开</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + P</code></td>
-<td align="left">快速打开</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + S</code></td>
-<td align="left">保存</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + Shift + S</code></td>
-<td align="left">另存为</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + W</code></td>
-<td align="left">关闭</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + Z</code></td>
-<td align="left">撤销</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + Y</code></td>
-<td align="left">重做</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl+Shift+C</code></td>
-<td align="left">复制为<code>MarkDown</code></td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl+Shift+V</code></td>
-<td align="left">粘贴为纯文本</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl+Shift+1</code></td>
-<td align="left">大纲视图</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl+Shift+2</code></td>
-<td align="left">文档列表视图</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl+Shift+3</code></td>
-<td align="left">文件树视图</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl+Shift+L</code></td>
-<td align="left">显示隐藏侧边栏</td>
-</tr>
-<tr>
-<td align="left"><code>F8</code></td>
-<td align="left">专注模式</td>
-</tr>
-<tr>
-<td align="left"><code>F9</code></td>
-<td align="left">打字机模式</td>
-</tr>
-<tr>
-<td align="left"><code>F11</code></td>
-<td align="left">切换全屏</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl+Shift+0</code></td>
-<td align="left">实际大小</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl + Shift+ +/-</code></td>
-<td align="left">放大&#x2F;缩小</td>
-</tr>
-<tr>
-<td align="left"><code>Ctrl+Tab</code></td>
-<td align="left">应用内窗口切换</td>
-</tr>
-<tr>
-<td align="left"><code>Shift+F12</code></td>
-<td align="left">打开<code>DevTools</code></td>
-</tr>
-<tr>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-</tbody></table>
-<h2 id="三、-生成pdf、html等文件"><a href="#三、-生成pdf、html等文件" class="headerlink" title="三、 生成pdf、html等文件"></a>三、 生成pdf、html等文件</h2><p>文件→导出→选择要导出文件的格式</p>
-<h2 id="四、画图"><a href="#四、画图" class="headerlink" title="四、画图"></a>四、画图</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/whatday/article/details/88655461">markdown 画图_markdown graph subgraph-CSDN博客</a></p>
-<ol>
-<li><p>graph 流程图</p>
-<ul>
-<li><code>TB</code>：从上到下</li>
-<li><code>TD</code>：从上到下</li>
-<li><code>BT</code>：从下到上</li>
-<li><code>RL</code>：从右到左</li>
-<li><code>LR</code>：从左到右</li>
-</ul>
-<p><strong>节点形状</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">默认节点 A</span><br><span class="line">文本节点 B[bname]</span><br><span class="line">圆角节点 C(cname)</span><br><span class="line">圆形节点 D((dname))</span><br><span class="line">非对称节点 E&gt;ename]</span><br><span class="line">菱形节点 F&#123;fname&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p> A~F 是当前节点名字，类似于变量名，画图时便于引用</p>
-</blockquote>
-<blockquote>
-<p> [b~f]name是节点中显示的文字，默认节点的名字和显示的文字都为A</p>
-</blockquote>
-   <pre class="mermaid">      graph LR;
-       A-->B[文本]
-       B[文本]-->C(圆角)
-       C(圆角)-->D((圆形))
-       D((圆形))-->E>非对称节点]
-       E>非对称节点]-->F{菱形}
-       F{菱形}-->A</pre>
-
-<p><strong>连线</strong></p>
-<p>节点间的连接线有多种形状，可以在连接线中加入标签：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">箭头连接 A1–-&gt;B1</span><br><span class="line">开放连接 A2—B2</span><br><span class="line">标签连接 A3–text—B3</span><br><span class="line">箭头标签连接 A4–text–&gt;B4</span><br><span class="line">虚线开放连接 A5.-B5</span><br><span class="line">虚线箭头连接 A6-.-&gt;B6</span><br><span class="line">标签虚线连接 A7-.text.-B7</span><br><span class="line">标签虚线箭头连接 A8-.text.-&gt;B8</span><br><span class="line">粗线开放连接 A9===B9</span><br><span class="line">粗线箭头连接 A10==&gt;B10</span><br><span class="line">标签粗线开放连接 A11==text===B11</span><br><span class="line">标签粗线箭头连接 A12==text==&gt;B12</span><br></pre></td></tr></table></figure>
-
-<pre class="mermaid">   graph TB
-  A1-->B1
-  A2---B2
-  A3--text---B3
-  A4--text-->B4
-  A5-.-B5
-  A6-.->B6
-  A7-.text.-B7
-  A8-.text.->B8
-  A9===B9
-  A10==>B10
-  A11==text===B11
-  A12==text==>B12</pre>
-
-<p>例子：</p>
-<pre class="mermaid">   
-graph LR
-  start("input x") --> handler("x > 0?")
-  handler --yes--> yes("output x")
-  handler --no--> start
-  yes --> exit("exit")</pre>
-
-
-
-</li>
-<li><p>flow 流程图</p>
-<p><strong>关键字</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">start/end，表示程序的开始与结束</span><br><span class="line">operation，表示程序的处理块</span><br><span class="line">subroutine，表示子程序块</span><br><span class="line">condition，表示程序的条件判断</span><br><span class="line">inputoutput，表示程序的出入输出</span><br><span class="line">right/left，表示当前连线在当前模块上的起点(默认从下端开始)</span><br><span class="line">yes/no， 表示condition判断的分支(可以和right，left同时使用)</span><br></pre></td></tr></table></figure>
-
-<p>通过定义模块与连接，再结合以上关键词即可定义简单流程图的各个模块。</p>
-<p>模块定义(模块标识与模块名称可以任意定义名称，但是不能为关键词)：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">模块标识(相当于变量名)=&gt;模块关键词: 模块名称(模块中显示的文字)</span><br></pre></td></tr></table></figure>
-
-<p>连接定义如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">模块标识1-&gt;模块标识2</span><br><span class="line">模块标识1-&gt;模块标识2-&gt;模块标识3</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<p>进行连接的时候，可以通过<code>right</code>，<code>left</code>确定箭头的起点。</p>
-<p>使用<code>condition</code>关键词定义的判断框的连接需要结合yes或者no使用，如</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cond1=&gt;condition: x&gt;0?</span><br><span class="line">cond1(yes)-&gt;module1</span><br><span class="line">cond1(no)-&gt;moudle2</span><br><span class="line"> </span><br><span class="line"># 指定方向,如果后面占用了这个方向, 前面的无效   </span><br><span class="line">cond1(yes,right)-&gt;module1</span><br><span class="line">cond1(no)-&gt;moudle2</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 先自定义变量,然后画图</span><br><span class="line">st=&gt;start: 开始</span><br><span class="line">e=&gt;end: 结束</span><br><span class="line">op=&gt;operation: 输入x</span><br><span class="line">sub=&gt;subroutine: 是否重新输入</span><br><span class="line">cond1=&gt;condition: x&gt;0?</span><br><span class="line">cond2=&gt;condition: yes/no </span><br><span class="line">io=&gt;inputoutput: 输出x  </span><br><span class="line"> </span><br><span class="line">st(right)-&gt;op-&gt;cond1</span><br><span class="line">cond1(yes)-&gt;io(right)-&gt;e</span><br><span class="line">cond1(no)-&gt;sub(right)-&gt;cond2()</span><br><span class="line">cond2(yes, right)-&gt;op</span><br><span class="line">cond2(no)-&gt;e</span><br></pre></td></tr></table></figure>
-
-<div id="flowchart-0" class="flow-chart"></div>
-
-
-</li>
-<li></li>
-</ol>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">   st=>start: 开始
-   e=>end: 结束
-   op=>operation: 输入x
-   sub=>subroutine: 是否重新输入
-   cond1=>condition: x>0?
-   cond2=>condition: yes/no 
-   io=>inputoutput: 输出x  
-    
-   st(right)->op->cond1
-   cond1(yes)->io(right)->e
-   cond1(no)->sub(right)->cond2()
-   cond2(yes, right)->op
-   cond2(no)->e</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
@@ -1304,6 +560,7 @@ graph LR
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">前置工作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%E3%80%81%E5%8D%B8%E8%BD%BD%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BF%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">1、卸载宝塔面板（可选）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E3%80%81%E5%AE%89%E8%A3%85docker"><span class="nav-number">1.2.</span> <span class="nav-text">2、安装docker</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#docker%E5%90%AF%E5%8A%A8%E6%8A%A5%E9%94%99"><span class="nav-number">1.2.1.</span> <span class="nav-text">docker启动报错</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%E3%80%81%E5%AE%89%E8%A3%85kubectl"><span class="nav-number">1.3.</span> <span class="nav-text">3、安装kubectl</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kubernetes"><span class="nav-number"></span> <span class="nav-text">kubernetes</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MiniKube"><span class="nav-number">2.</span> <span class="nav-text">MiniKube</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8"><span class="nav-number">2.2.</span> <span class="nav-text">启动</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">部署应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#nginx%E9%83%A8%E7%BD%B2"><span class="nav-number">3.1.</span> <span class="nav-text">nginx部署</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
