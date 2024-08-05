@@ -3,7 +3,8 @@
   <entry>
     <title>Linux入门</title>
     <url>/2024/08/05/Linux%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h3 id="1、tee和cat使用EOF往文件中添加内容"><a href="#1、tee和cat使用EOF往文件中添加内容" class="headerlink" title="1、tee和cat使用EOF往文件中添加内容"></a>1、<code>tee</code>和<code>cat</code>使用<code>EOF</code>往文件中添加内容</h3><h4 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h4><ul>
+    <content><![CDATA[<p>[TOC] </p>
+<h3 id="1、tee和cat使用EOF往文件中添加内容"><a href="#1、tee和cat使用EOF往文件中添加内容" class="headerlink" title="1、tee和cat使用EOF往文件中添加内容"></a>1、<code>tee</code>和<code>cat</code>使用<code>EOF</code>往文件中添加内容</h3><h4 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h4><ul>
 <li><p>覆盖：要写入的文件可以放在<strong>中间或最后</strong></p>
 <ol>
 <li><p>格式一</p>
@@ -37,6 +38,58 @@
 <p>使用指令 <code>tee</code> 将用户输入的数据同时保存到文件 <code>file1</code> 和 <code>file2</code> 中，输入如下命令：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在两个文件中复制内容</span></span><br><span class="line">$ <span class="built_in">tee</span> file1 file2</span><br><span class="line"><span class="comment"># 输入需要保存到文件的数据</span></span><br><span class="line">Test <span class="built_in">tee</span> <span class="comment">#提示用户输入数据</span></span><br><span class="line">Test <span class="built_in">tee</span> <span class="comment">#输出数据，进行输出反馈</span></span><br><span class="line"><span class="comment"># Ctrl + C退出</span></span><br><span class="line"><span class="comment"># 验证是否写入成功</span></span><br><span class="line">$ <span class="built_in">cat</span> file1 file2</span><br></pre></td></tr></table></figure>
 
+<h3 id="2、使用-cat-命令结合重定向可以在指定位置写入内容"><a href="#2、使用-cat-命令结合重定向可以在指定位置写入内容" class="headerlink" title="2、使用 cat 命令结合重定向可以在指定位置写入内容"></a>2、使用 <code>cat</code> 命令结合重定向可以在指定位置写入内容</h3><blockquote>
+<p><strong>备份原文件</strong></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">cp</span> filename.txt filename_backup.txt</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><h4 id="使用-head-和-tail-命令结合重定向"><a href="#使用-head-和-tail-命令结合重定向" class="headerlink" title="使用 head 和 tail 命令结合重定向"></a><strong>使用 <code>head</code> 和 <code>tail</code> 命令结合重定向</strong></h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将文件的前5行输出到临时文件temp.txt中</span></span><br><span class="line">$ <span class="built_in">head</span> -n 5 filename.txt &gt; temp.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在temp.txt中添加要插入的内容</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;New content to insert&quot;</span> &gt;&gt; temp.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将文件剩余的内容（即第6行到文件末尾）追加到temp.txt中</span></span><br><span class="line">$ <span class="built_in">tail</span> -n +6 filename.txt &gt;&gt; temp.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将temp.txt内容覆盖到原始文件filename.txt</span></span><br><span class="line">$ <span class="built_in">mv</span> temp.txt filename.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用 <code>sed</code> 命令</strong></p>
+<p><code>sed</code> 命令可以用于流编辑，可以直接在指定的行后插入内容</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sed <span class="string">&#x27;5a\</span></span><br><span class="line"><span class="string">New content to insert</span></span><br><span class="line"><span class="string">&#x27;</span> filename.txt &gt; temp.txt &amp;&amp; <span class="built_in">mv</span> temp.txt filename.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用 <code>awk</code> 命令</strong></p>
+<p><code>awk</code> 可以用于处理文本文件，可以通过它在指定行后插入内容</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ awk <span class="string">&#x27;NR==5 &#123;print &quot;New content to insert&quot;&#125; 1&#x27;</span> filename.txt &gt; temp.txt &amp;&amp; <span class="built_in">mv</span> temp.txt filename.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用 <code>ed</code> 命令</strong></p>
+<p><code>ed</code> 是一个文本编辑器，可以在不打开文件的情况下直接编辑文件内容，适合于批处理脚本中的文件操作</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 验证安装</span></span><br><span class="line">$ ed --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 ed</span></span><br><span class="line">$ <span class="built_in">sudo</span> yum install ed     <span class="comment"># 如果使用的是 CentOS 7 或更早版本</span></span><br><span class="line">或</span><br><span class="line">$ <span class="built_in">sudo</span> dnf install ed     <span class="comment"># 如果使用的是 CentOS 8 或更新版本</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ed -s filename.txt &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">5a</span></span><br><span class="line"><span class="string">New content to insert</span></span><br><span class="line"><span class="string">.</span></span><br><span class="line"><span class="string">w</span></span><br><span class="line"><span class="string">q</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="3、sed"><a href="#3、sed" class="headerlink" title="3、sed"></a>3、<code>sed</code></h3><p><code>sed</code>（Stream Editor）是一个非常强大的流式文本编辑工具，它主要用于对文本流进行编辑、转换和过滤。</p>
+<p>以下是一些 <code>sed</code> 命令的常用操作和示例：</p>
+<ol>
+<li><h4 id="替换文本："><a href="#替换文本：" class="headerlink" title="替换文本："></a><strong>替换文本</strong>：</h4><p>使用 <code>s</code> 命令可以在文本中进行<strong>替换</strong>操作</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在文件中将所有的 &quot;old_text&quot; 替换为 &quot;new_text&quot;</span></span><br><span class="line"><span class="comment"># 不保存</span></span><br><span class="line">$ sed <span class="string">&#x27;s/old_text/new_text/g&#x27;</span> filename.txt</span><br><span class="line"><span class="comment"># 保存修改</span></span><br><span class="line">$ sed -i <span class="string">&#x27;s/old_text/new_text/g&#x27;</span> filename.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 仅替换每行的第一个匹配</span></span><br><span class="line">$ sed -i <span class="string">&#x27;s/old_text/new_text/&#x27;</span> filename.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><h4 id="删除行："><a href="#删除行：" class="headerlink" title="删除行："></a><strong>删除行</strong>：</h4><p>使用 <code>d</code> 命令可以删除匹配的行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 删除包含特定文本的行</span></span><br><span class="line"><span class="comment"># sed &#x27;/pattern_to_delete/d&#x27; filename.txt</span></span><br><span class="line"><span class="comment"># 删除文件 `filename.txt` 中包含单词 &quot;example&quot; 的所有行</span></span><br><span class="line">$ sed -i <span class="string">&#x27;/example/d&#x27;</span> filename.txt</span><br><span class="line"><span class="comment"># 删除文件 `filename.txt` 中所有以 &quot;pattern&quot; 开头的行</span></span><br><span class="line">$ sed -i <span class="string">&#x27;/^pattern/d&#x27;</span> filename.txt</span><br><span class="line"><span class="comment"># 删除文件 `filename.txt` 中所有空白行（只包含空格或制表符的行）</span></span><br><span class="line">$ sed -i <span class="string">&#x27;/^\s*$/d&#x27;</span> filename.txt</span><br><span class="line"><span class="comment"># 删除文件 `filename.txt` 中所有以 &quot;start_with&quot; 开头的行</span></span><br><span class="line">$ sed -i <span class="string">&#x27;/^start_with/d&#x27;</span> filename.txt</span><br><span class="line"><span class="comment"># 删除文件 `filename.txt` 中包含任何数字的所有行：</span></span><br><span class="line">$ sed -i <span class="string">&#x27;/[0-9]/d&#x27;</span> filename.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除第 N 行</span></span><br><span class="line">$ sed -i <span class="string">&#x27;Nd&#x27;</span> filename.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><h4 id="插入和追加行："><a href="#插入和追加行：" class="headerlink" title="插入和追加行："></a><strong>插入和追加行</strong>：</h4><p>使用 <code>i</code> 命令插入行，在指定行之前插入内容；</p>
+<p>使用 <code>a</code> 命令追加行，在指定行之后追加内容。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在第 N 行前插入内容</span></span><br><span class="line">sed -i <span class="string">&#x27;Ni\</span></span><br><span class="line"><span class="string">This is the new line&#x27;</span> filename.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在第 N 行后追加内容</span></span><br><span class="line">sed -i <span class="string">&#x27;Na\</span></span><br><span class="line"><span class="string">This is the new line&#x27;</span> filename.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><h4 id="打印行："><a href="#打印行：" class="headerlink" title="打印行："></a><strong>打印行</strong>：</h4><p>使用 <code>p</code> 命令可以打印匹配的行。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打印包含特定文本的行</span></span><br><span class="line">sed -n <span class="string">&#x27;/pattern_to_print/p&#x27;</span> filename.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印特定行号的内容</span></span><br><span class="line">sed -n <span class="string">&#x27;Np&#x27;</span> filename.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>选定行范围</strong>：</p>
+<p>使用起始行号和结束行号，可以选定一个行范围进行操作。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打印从第 N 行到第 M 行之间的内容</span></span><br><span class="line">sed -n <span class="string">&#x27;N,Mp&#x27;</span> filename.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除从第 N 行到第 M 行之间的内容</span></span><br><span class="line">sed <span class="string">&#x27;N,Md&#x27;</span> filename.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>保存修改</strong>：</p>
+<p>默认情况下，<code>sed</code> 命令只是在屏幕上显示修改后的内容，并不会修改原始文件。</p>
+<p>要将修改保存回原始文件，可以使用重定向操作符结合 <code>-i</code> 选项（原地修改）。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将修改后的内容保存回原始文件</span></span><br><span class="line">sed -i <span class="string">&#x27;s/old_text/new_text/g&#x27;</span> filename.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>多个命令组合</strong>：</p>
+<p>可以使用分号 <code>;</code> 将多个 <code>sed</code> 命令组合在一起，依次应用于每行文本。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将同时执行多个操作：删除包含 &quot;pattern&quot; 的行，将 &quot;old_text&quot; 替换为 &quot;new_text&quot;，并在第 N 行前插入新内容</span></span><br><span class="line">sed <span class="string">&#x27;/pattern/d; s/old_text/new_text/g; Ni\</span></span><br><span class="line"><span class="string">New line to insert&#x27;</span> filename.txt</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>这些是 <code>sed</code> 命令的一些常见用法示例，<code>sed</code> 的功能非常强大，可以通过组合不同的命令和选项来满足各种文本处理需求。</p>
 ]]></content>
       <tags>
         <tag>Linux</tag>
