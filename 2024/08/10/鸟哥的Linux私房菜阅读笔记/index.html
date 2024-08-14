@@ -30,7 +30,7 @@
 <meta property="og:description" content="[TOC]  一、计算机概论计算机：接受输入指令与数据，经由中央处理器的数学与逻辑单元运算处理后，以产生或储存成有用的信息。 计算机由五个主要单元所组成的，包括输入单元、输出单元、CPU 内部的控制单元、算数逻辑单元与内存五大部分。 重点在于中央处理器（Central Processing Unit,  CPU），CPU 为一个具有特定功能的芯片，里头含有微指令集。 CPU 的工作主要在于管理与运">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-08-10T09:46:35.000Z">
-<meta property="article:modified_time" content="2024-08-10T09:48:00.000Z">
+<meta property="article:modified_time" content="2024-08-14T09:57:54.000Z">
 <meta property="article:author" content="Dr July">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -218,10 +218,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2024-08-10 17:46:35 / 修改时间：17:48:00" itemprop="dateCreated datePublished" datetime="2024-08-10T17:46:35+08:00">2024-08-10</time>
+              <time title="创建时间：2024-08-10 17:46:35" itemprop="dateCreated datePublished" datetime="2024-08-10T17:46:35+08:00">2024-08-10</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-08-14 17:57:54" itemprop="dateModified" datetime="2024-08-14T17:57:54+08:00">2024-08-14</time>
+              </span>
 
           
 
@@ -809,9 +815,512 @@
 </ul>
 </li>
 </ul>
-<h1 id="三、Linux的文件权限与目录配置"><a href="#三、Linux的文件权限与目录配置" class="headerlink" title="三、Linux的文件权限与目录配置"></a>三、Linux的文件权限与目录配置</h1><p>未完待续…</p>
-<p>七、Linux文件与目录管理</p>
-<p>八、Linux磁盘与文件系统管理</p>
+<h1 id="三、Linux的文件权限与目录配置"><a href="#三、Linux的文件权限与目录配置" class="headerlink" title="三、Linux的文件权限与目录配置"></a>三、Linux的文件权限与目录配置</h1><p>Linux一般将文件可存取的身份分为三个类别，分别是 <code>owner/group/others</code>，且三种身份各有 <code>read/write/execute</code> 等权限</p>
+<ul>
+<li><p>owner（所有者）</p>
+<ul>
+<li><strong>定义</strong>：每个文件和目录都有一个所有者，通常是创建文件的用户。所有者对文件有特定的权限，可以是读取、写入或执行。</li>
+<li><strong>权限表示</strong>：在文件权限的表示中，所有者的权限通常是权限字符串的第一个三位部分。例如，<code>-rwxr-xr--</code> 中的 <code>rwx</code> 表示所有者的权限。</li>
+</ul>
+</li>
+<li><p>group（组）</p>
+<ul>
+<li><p><strong>定义</strong>：文件和目录的每个所有者都有一个关联的用户组。文件或目录的权限可以授予该组的所有成员。组权限使得同组的用户可以共享对文件的访问权。</p>
+</li>
+<li><p><strong>权限表示</strong>：在权限字符串中，组的权限是第二个三位部分。例如，<code>-rwxr-xr--</code> 中的 <code>r-x</code> 表示组用户的权限。</p>
+</li>
+</ul>
+</li>
+<li><p>others（其他用户）</p>
+<ul>
+<li><p><strong>定义</strong>：除文件所有者和文件所属组的用户之外的所有其他用户。这类用户的权限控制是为了保护文件不被不相关的用户访问。</p>
+</li>
+<li><p><strong>权限表示</strong>：在权限字符串中，其他用户的权限是第三个三位部分。例如，<code>-rwxr-xr--</code> 中的 <code>r--</code> 表示其他用户的权限。</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Linux使用者与群组记录的文件 </p>
+<p>账号：&#x2F;etc&#x2F;passwd</p>
+<p>密码：&#x2F;etc&#x2F;shadow</p>
+<p>群组：&#x2F;etc&#x2F;group</p>
+</blockquote>
+<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><p>使用 <code>ls -al</code> 可以查看文件权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@172-12-0-1 ~]# <span class="built_in">ls</span> -al</span><br><span class="line">总用量 148</span><br><span class="line">dr-xr-x---. 10 root root  4096 8月  12 10:51 .</span><br><span class="line">dr-xr-xr-x. 24 root root  4096 7月  30 17:11 ..</span><br><span class="line">-rw-------   1 root root 16635 8月  12 10:51 .bash_history</span><br><span class="line">-rw-r--r--   1 root root   234 7月  30 08:56 .bashrc</span><br><span class="line">drwxr-xr-x.  3 root root    17 7月  18 19:53 .cache</span><br><span class="line">drwx------   3 root root    25 7月  23 11:15 .config</span><br><span class="line">-rw-r--r--.  1 root root 47639 7月  16 11:45 install.sh</span><br><span class="line">drwxr-x---   4 root root    37 7月  29 18:00 .vim</span><br></pre></td></tr></table></figure>
+
+<h3 id="ls-al-显示字段解释"><a href="#ls-al-显示字段解释" class="headerlink" title="ls -al 显示字段解释"></a><code>ls -al</code> 显示字段解释</h3><h4 id="文件类型和权限-第1个参数"><a href="#文件类型和权限-第1个参数" class="headerlink" title="文件类型和权限(第1个参数)"></a>文件类型和权限(第1个参数)</h4><ul>
+<li><code>drwxr-xr-x</code> 文件的权限和类型<ul>
+<li>第一个字符表示文件类型<ul>
+<li><code>-</code>：普通文件</li>
+<li><code>d</code>：目录</li>
+<li><code>l</code>：符号链接（link file）</li>
+<li><code>c</code>：字符设备文件</li>
+<li><code>b</code>：块设备文件</li>
+<li><code>p</code>：命名管道（FIFO）</li>
+<li><code>s</code>：套接字</li>
+</ul>
+</li>
+<li>接下来的九个字符表示权限，没有权限时用 <code>-</code> 代替<ul>
+<li><code>r</code>：读取权限，数字4表示</li>
+<li><code>w</code>：写入权限，数字2表示</li>
+<li><code>x</code>：执行权限，数字1表示</li>
+</ul>
+</li>
+<li>权限分为三个部分，每部分三个字符<ul>
+<li>所有者的权限</li>
+<li>所属组的权限</li>
+<li>其他用户的权限</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="硬链接数量（第2个参数）"><a href="#硬链接数量（第2个参数）" class="headerlink" title="硬链接数量（第2个参数）"></a>硬链接数量（第2个参数）</h4><ul>
+<li>1：硬链接的数量。对于文件来说，通常是 <code>1</code>。对于目录，这个数字表示目录内包含的子目录数量加上 <code>.</code> 和 <code>..</code></li>
+</ul>
+<h4 id="所有者（第3个参数）"><a href="#所有者（第3个参数）" class="headerlink" title="所有者（第3个参数）"></a>所有者（第3个参数）</h4><ul>
+<li><code>root</code>：文件或目录的所有者用户名。</li>
+</ul>
+<h4 id="所属组（第4个参数）"><a href="#所属组（第4个参数）" class="headerlink" title="所属组（第4个参数）"></a>所属组（第4个参数）</h4><ul>
+<li><code>root</code>：文件或目录的所属组名。</li>
+</ul>
+<h4 id="文件大小（第5个参数）"><a href="#文件大小（第5个参数）" class="headerlink" title="文件大小（第5个参数）"></a>文件大小（第5个参数）</h4><ul>
+<li><code>4096</code>：文件的大小，以字节为单位。对于目录，这个数字通常表示目录的元数据大小，而不是目录中文件的总大小</li>
+</ul>
+<h4 id="文件修改时间（第6个参数）"><a href="#文件修改时间（第6个参数）" class="headerlink" title="文件修改时间（第6个参数）"></a>文件修改时间（第6个参数）</h4><ul>
+<li>8月  12 10:51：文件最后一次修改的日期和时间。格式通常为“月 日 时间”</li>
+</ul>
+<h4 id="文件名（第7个参数）"><a href="#文件名（第7个参数）" class="headerlink" title="文件名（第7个参数）"></a>文件名（第7个参数）</h4><ul>
+<li><code>.bashrc</code>：文件或目录的名称，前面带<code>.</code>的是隐藏文件</li>
+</ul>
+<h2 id="改变文件属性和权限"><a href="#改变文件属性和权限" class="headerlink" title="改变文件属性和权限"></a>改变文件属性和权限</h2><ul>
+<li><p>chgrp ：改变文件所属群组（changegroup）</p>
+<ul>
+<li>要被改变的群组名称必须要在<code>/etc/group</code>文件内存在才行</li>
+</ul>
+</li>
+<li><p>chown ：改变文件拥有者（change owner）</p>
+<ul>
+<li>使用者必须是已经存在系统中的帐号，在<code>/etc/passwd</code> 这个文件中有纪录的使用者名称才能改变</li>
+<li>还可以顺便修改群组的名称, <code>chown user:group file</code></li>
+</ul>
+</li>
+<li><p>chmod ：改变文件的权限, SUID, SGID, SBIT等等的特性</p>
+<ul>
+<li>八进制模式<ul>
+<li>权限用三位八进制数字表示，每位数字的范围是 <code>0</code> 到 <code>7</code><ul>
+<li>4：读取权限 (<code>r</code>)</li>
+<li>2：写入权限 (<code>w</code>)</li>
+<li><strong>1</strong>：执行权限 (<code>x</code>)</li>
+</ul>
+</li>
+<li>每种身份（owner&#x2F;group&#x2F;others）各自的三个权限（r&#x2F;w&#x2F;x）分数是累加的，比如<code>775</code> 代表 <code>-rwxrwxr-x</code></li>
+</ul>
+</li>
+<li>符号模式<ul>
+<li>符号模式使用字符表示权限<ul>
+<li><code>u</code>：所有者（user）</li>
+<li><code>g</code>：组（group）</li>
+<li><code>o</code>：其他用户（others）</li>
+<li><code>a</code>：所有用户（all）</li>
+</ul>
+</li>
+<li>操作符：<ul>
+<li><code>+</code>：添加权限</li>
+<li><code>-</code>：移除权限</li>
+<li><code>=</code>：设置权限</li>
+</ul>
+</li>
+<li><code>-rwxr-xr-x</code> 可以设置为<code>chmod u=rwx,go=rx .bashrc</code>，<strong>其中u&#x3D;rwx,go&#x3D;rx间没有空格</strong></li>
+<li>如果只想要增加<code>.bashrc</code>这个文件每个人均可写入的权限，可以使用 <code>chmod a+w .bashrc</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="FHS文件系统"><a href="#FHS文件系统" class="headerlink" title="FHS文件系统"></a>FHS文件系统</h2><p><strong>FHS（Filesystem Hierarchy Standard）</strong> 是一个定义 Linux 系统文件和目录结构的标准。FHS 提供了一个一致的文件系统布局指南，使得 Linux 发行版具有良好的兼容性和一致性。它规范了系统中常见的目录及其用途，便于系统管理员和开发人员理解和管理文件系统</p>
+<h3 id="主要目录和其含义"><a href="#主要目录和其含义" class="headerlink" title="主要目录和其含义"></a>主要目录和其含义</h3><table>
+<thead>
+<tr>
+<th>目录</th>
+<th>中文名</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;</td>
+<td>根目录</td>
+<td>文件系统的顶层目录，所有其他目录都挂载在这里</td>
+</tr>
+<tr>
+<td>&#x2F;bin</td>
+<td>基本用户命令</td>
+<td>包含系统启动和修复所需的基本命令，如 <code>ls</code>, <code>cp</code>, <code>mv</code> 等</td>
+</tr>
+<tr>
+<td>&#x2F;boot</td>
+<td>启动文件</td>
+<td>存放系统启动所需的文件，如内核映像（<code>vmlinuz</code>）和引导加载程序配置文件（<code>grub</code>）</td>
+</tr>
+<tr>
+<td>&#x2F;dev</td>
+<td>设备文件</td>
+<td>包含设备文件，这些文件表示系统中的各种设备（如硬盘、终端等），通常是以 <code>char</code> 和 <code>block</code> 设备文件的形式存在</td>
+</tr>
+<tr>
+<td>&#x2F;etc</td>
+<td>系统配置文件</td>
+<td>包含系统级别的配置文件和目录，如 <code>passwd</code>, <code>fstab</code>, <code>network</code>, 和其他系统配置文件</td>
+</tr>
+<tr>
+<td>&#x2F;home</td>
+<td>用户主目录</td>
+<td>各用户的个人目录，通常每个用户都有一个子目录（如 <code>/home/username</code>）</td>
+</tr>
+<tr>
+<td>&#x2F;lib</td>
+<td>共享库</td>
+<td>存放系统和应用程序使用的共享库文件。常见的库文件用于支持 <code>/bin</code> 和 <code>/sbin</code> 中的二进制文件</td>
+</tr>
+<tr>
+<td>&#x2F;media</td>
+<td>可移动媒体</td>
+<td>自动挂载可移动媒体（如 CD-ROM、USB 设备）的位置</td>
+</tr>
+<tr>
+<td>&#x2F;mnt</td>
+<td>临时挂载点</td>
+<td>用于临时挂载文件系统，通常用于手动挂载</td>
+</tr>
+<tr>
+<td>&#x2F;opt</td>
+<td>附加应用程序</td>
+<td>用于安装附加的应用程序软件包。每个软件包可以有自己的子目录</td>
+</tr>
+<tr>
+<td>&#x2F;proc</td>
+<td>虚拟文件系统</td>
+<td>提供关于内核和进程的信息，目录内容是虚拟的，不占用磁盘空间。常用于获取系统信息，如 <code>/proc/cpuinfo</code> 和 <code>/proc/meminfo</code></td>
+</tr>
+<tr>
+<td>&#x2F;root</td>
+<td>根用户的主目录</td>
+<td>根用户（超级用户）的个人目录，通常用于存放根用户的配置文件</td>
+</tr>
+<tr>
+<td>&#x2F;run</td>
+<td>运行时数据</td>
+<td>存放系统启动后产生的运行时数据，如 PID 文件、套接字等</td>
+</tr>
+<tr>
+<td>&#x2F;srv</td>
+<td>服务数据</td>
+<td>存放由系统提供的服务数据，如 HTTP 或 FTP 服务的数据文件</td>
+</tr>
+<tr>
+<td>&#x2F;sys</td>
+<td>系统文件</td>
+<td>提供内核和硬件的信息，类似于 <code>/proc</code>，但用于访问内核的实时信息</td>
+</tr>
+<tr>
+<td>&#x2F;tmp</td>
+<td>临时文件</td>
+<td>存放临时文件，通常这些文件在系统重启后会被删除</td>
+</tr>
+<tr>
+<td>&#x2F;usr</td>
+<td>用户程序</td>
+<td><code>Unix Software Resource</code>的缩写，存放用户级程序和数据。通常包括 <code>/usr/bin</code>（用户命令）、<code>/usr/lib</code>（共享库）和 <code>/usr/share</code>（共享数据）</td>
+</tr>
+<tr>
+<td>&#x2F;var</td>
+<td>可变数据</td>
+<td>存放系统运行时产生的文件，如日志文件（<code>/var/log</code>）、邮件（<code>/var/mail</code>）、缓存（<code>/var/cache</code>）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p> 更多内容参考官方文档：<a target="_blank" rel="noopener" href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html">Filesystem Hierarchy Standard (linuxfoundation.org)</a></p>
+</blockquote>
+<h1 id="四、Linux文件与目录管理"><a href="#四、Linux文件与目录管理" class="headerlink" title="四、Linux文件与目录管理"></a>四、Linux文件与目录管理</h1><h2 id="绝对路径与相对路径"><a href="#绝对路径与相对路径" class="headerlink" title="绝对路径与相对路径"></a>绝对路径与相对路径</h2><ul>
+<li>绝对路径：路径的写法一定由根目录 <code>/</code> 写起，例如： &#x2F;usr&#x2F;share&#x2F;doc 这个目录</li>
+<li>相对路径：路径的写法不是由 <code>/</code> 写起，相对路径指相对于目前工作目录的路径！例如由 &#x2F;usr&#x2F;share&#x2F;doc 要到 &#x2F;usr&#x2F;share&#x2F;man 下面时，可以写成： <code>cd ../man</code></li>
+</ul>
+<h2 id="目录的相关操作"><a href="#目录的相关操作" class="headerlink" title="目录的相关操作"></a>目录的相关操作</h2><p>在所有目录下面都会存在的两个目录，分别是<code>.</code>与<code>..</code>分别代表此层与上层目录的意思</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.         代表此层目录</span><br><span class="line">..        代表上一层目录</span><br><span class="line">-         代表前一个工作目录</span><br><span class="line">~         代表“目前使用者身份”所在的主文件夹</span><br><span class="line">~account  代表 account 这个使用者的主文件夹</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>cd：变换目录</p>
+</li>
+<li><p>pwd：显示目前的目录</p>
+</li>
+<li><p>mkdir：创建一个新的目录</p>
+<ul>
+<li>mkdir [-mp] 目录名称</li>
+</ul>
+<p>  -m ：设置文件的权限</p>
+<p>  -p：直接将所需要的目录（包含上层目录）递归创建起来</p>
+</li>
+<li><p>rmdir：删除一个<strong>空</strong>的目录</p>
+</li>
+<li><p>ls：列出目录内容</p>
+</li>
+<li><p>mv：移动或重命名目录</p>
+</li>
+<li><p>cp：复制目录</p>
+</li>
+<li><p>du：查看目录大小，<code>du -sh directory_name</code></p>
+</li>
+<li><p>ln s：创建符号链接</p>
+</li>
+<li><p>rm：移除文件或目录</p>
+</li>
+<li><p>basename：显示文件名</p>
+</li>
+<li><p>dirname：显示目录名</p>
+</li>
+</ul>
+<h2 id="可执行文件路径变量（环境变量）：-PATH"><a href="#可执行文件路径变量（环境变量）：-PATH" class="headerlink" title="可执行文件路径变量（环境变量）：$PATH"></a>可执行文件路径变量（环境变量）：$PATH</h2><p>执行一个指令的时候，比如 <code>ls</code>，系统会依照<code>PATH</code>的设置去每个PATH定义的目录下搜寻文件名为ls的可执行文件，如果在PATH定义的目录中含有多个文件名为<code>ls</code>的可执行文件，那么先搜寻到的同名指令先被执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ <span class="built_in">echo</span> <span class="variable">$PATH</span></span><br><span class="line"><span class="comment"># 这个变量的内容由一堆目录所组成，每个目录中间用冒号（:）来隔开，每个目录是有顺序之分的</span></span><br><span class="line">/home/test/.local/bin:/home/test/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin</span><br></pre></td></tr></table></figure>
+
+<h2 id="文件内容查询"><a href="#文件内容查询" class="headerlink" title="文件内容查询"></a>文件内容查询</h2><ul>
+<li><p>cat ：由第一行开始显示文件内容</p>
+</li>
+<li><p>tac ：从最后一行开始显示（ tac 是 cat 倒着写）</p>
+</li>
+<li><p>nl ：显示的时候输出行号</p>
+</li>
+<li><p>more： 一页一页的显示文件内容，</p>
+<ul>
+<li><code>空格</code>：向下翻页</li>
+<li><code>Enter</code>：向下翻一行</li>
+<li><code>:f</code>：显示文件名和目前行数</li>
+<li><code>b</code>：向上翻页</li>
+<li><code>/字符串</code>：搜索字符串</li>
+<li><code>q</code>：退出</li>
+</ul>
+</li>
+<li><p>less：与 more 类似，比 more 更强大</p>
+<ul>
+<li><code>空格</code>：向下翻页</li>
+<li><code>b</code>：向上翻页</li>
+<li><code>/字符串</code>：搜索字符串</li>
+<li><code>pagedown</code>：向下翻动一页</li>
+<li><code>pageup</code>：向上翻动一页</li>
+<li><code>/字符串</code>：向下搜索字串串</li>
+<li><code>?字符串</code>：向上搜索字符串</li>
+<li><code>n</code>：重复前一个搜索</li>
+<li><code>N</code>：反向的重复前一个搜索</li>
+<li><code>g</code>：前进到这个数据的第一行去</li>
+<li><code>G</code>：前进到这个数据的最后一行去（注意大小写）</li>
+<li><code>q</code>：离开less程序</li>
+</ul>
+</li>
+<li><p>head：只显示前几行，不加参数默认显示前10行</p>
+<ul>
+<li>打印指定行数：<code>head [-n 数字] filename</code></li>
+<li>打印除了最后行数：<code>head -n -10 filename</code></li>
+</ul>
+</li>
+<li><p>tail： 只显示后几行，不加参数默认显示后10行</p>
+<ul>
+<li><code>tail [-n 数字] filename</code>：输出最后几行</li>
+<li><code>tail -f filename</code>：持续监测文件并输出</li>
+<li><code>tail -n +100 filename</code>：不知道文件有几行，只想列出100行以后的数据</li>
+</ul>
+<blockquote>
+<p><strong>显示文件中间几行</strong></p>
+<p>显示文件 11 到 20 行：head -n 20 &#x2F;etc&#x2F;man_db.conf | tail -n 10</p>
+<p>带行号显示11到20行：cat &#x2F;etc&#x2F;man_db.conf | head -n 20 | tail -n 10</p>
+<blockquote>
+<p><strong>|</strong> 是管道符，表示前面的指令所输出的信息，交由后续的指令继续使用，所以tail不需要加文件名</p>
+</blockquote>
+</blockquote>
+</li>
+<li><p>od： 读取非纯文本文件内容</p>
+<ul>
+<li><p><code>echo password | od -t oCc</code></p>
+</li>
+<li><p>**<code>-t</code>**：指定输出格式：</p>
+<p>**<code>o</code>**：输出八进制格式</p>
+<p>**<code>C</code>**：输出字符形式，并显示 ASCII 码</p>
+<p>**<code>c</code>**：输出 ASCII 字符，并在遇到不可打印字符时显示 <code>.</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="修改文件时间或创建新文件：touch"><a href="#修改文件时间或创建新文件：touch" class="headerlink" title="修改文件时间或创建新文件：touch"></a>修改文件时间或创建新文件：touch</h2><p>通过<code>ls</code>可以看到每个文件在linux下面都会记录很多时间参数，有三个主要的变动时间</p>
+<ul>
+<li>modification time （mtime）：当文件的<strong>内容（不包括文件的属性或权限）</strong>变更时，会更新这个时间</li>
+<li>status time （ctime）：当文件的<strong>状态（权限与属性）</strong>改变时，会更新这个时间</li>
+<li>access time （atime）：当文件内容<strong>被读取（例如<code>cat</code> ）</strong>时，就会更新这个读取时间（access）</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ; 表示多重指令，可以依次执行</span></span><br><span class="line">[root@172-12-0-1 <span class="built_in">test</span>]# <span class="built_in">date</span>;\</span><br><span class="line"><span class="built_in">ls</span> -l /etc/man_db.conf;\</span><br><span class="line"><span class="built_in">ls</span> -l --time=atime /etc/man_db.conf;\</span><br><span class="line"><span class="built_in">ls</span> -l --time=ctime /etc/man_db.conf</span><br><span class="line"><span class="comment"># 当前时间</span></span><br><span class="line">2024年 08月 13日 星期二 11:59:19 CST</span><br><span class="line"><span class="comment"># ls默认展示mtime</span></span><br><span class="line">-rw-r--r--. 1 root root 5165 6月  30 2021 /etc/man_db.conf</span><br><span class="line"><span class="comment"># 读取时间</span></span><br><span class="line">-rw-r--r--. 1 root root 5165 8月  12 13:47 /etc/man_db.conf</span><br><span class="line"><span class="comment"># 系统按安装时间点</span></span><br><span class="line">-rw-r--r--. 1 root root 5165 7月  18 19:35 /etc/man_db.conf</span><br></pre></td></tr></table></figure>
+
+<h3 id="touch"><a href="#touch" class="headerlink" title="touch"></a>touch</h3><h4 id="作用-1"><a href="#作用-1" class="headerlink" title="作用"></a>作用</h4><ol>
+<li>创建一个空文件</li>
+<li>修改一个文件的<code>atime</code>和<code>mtime</code>，不能修改<code>ctime</code></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ <span class="built_in">touch</span> [-acdmt] filename</span><br><span class="line"><span class="comment"># 选项与参数：</span></span><br><span class="line">-a：仅修订 access time</span><br><span class="line">-c：仅修改文件的时间，若该文件不存在则不创建新文件</span><br><span class="line">-d：后面可以接欲修订的日期而不用目前的日期，也可以使用 --<span class="built_in">date</span>=<span class="string">&quot;日期或时间&quot;</span></span><br><span class="line">-m：仅修改 mtime</span><br><span class="line">-t：后面可以接欲修订的时间而不用目前的时间，格式为[YYYYMMDDhhmm]</span><br></pre></td></tr></table></figure>
+
+<h2 id="文件与目录的默认权限与隐藏权限"><a href="#文件与目录的默认权限与隐藏权限" class="headerlink" title="文件与目录的默认权限与隐藏权限"></a>文件与目录的默认权限与隐藏权限</h2><p>除了基本<code>r, w, x</code>权限外，在Linux传统的<code>Ext2/Ext3/Ext4</code>文件系统下，还可以设置其他的系统隐藏属性，这部份可使用<code>chattr</code>来设置，以<code>lsattr</code>来查看，最重要的属性就是可以设置其不可修改的特性（文件所有者也不能修改），这个属性是相当重要的，尤其是在安全机制上面（security）。</p>
+<p>比较可惜的是，在 <code>CentOS 7.x</code> 后利用 xfs 作为默认文件系统，xfs 没有支持所有的 <code>chattr</code> 的参数。</p>
+<h3 id="文件默认权限：umask"><a href="#文件默认权限：umask" class="headerlink" title="文件默认权限：umask"></a>文件默认权限：umask</h3><p>umask：在创建新文件和目录时，系统会默认使用哪些权限；通过从默认权限中减去，来限制文件和目录的权限。关于默认 <code>umask</code> 的设置可以参考 <code>/etc/bashrc</code> 这个文件的内容</p>
+<p><strong>默认权限</strong>：</p>
+<ul>
+<li>文件的默认权限是 666（即 <code>rw-rw-rw-</code>），表示所有用户都具有读写权限</li>
+<li>目录的默认权限是 777（即 <code>rwxrwxrwx</code>），表示所有用户都具有读、写、执行权限</li>
+</ul>
+<p><strong>umask</strong>：</p>
+<ul>
+<li><strong>umask</strong> 是一个掩码，它从默认权限中减去指定的权限</li>
+<li>例如，如果 umask 设置为 <code>022</code>，则新创建的文件和目录的权限会从默认权限中减去 <code>022</code>，即：<ul>
+<li>文件的权限会是 <code>644</code>（即 <code>rw-r--r--</code>），去掉了组和其他用户的写权限</li>
+<li>目录的权限会是 <code>755</code>（即 <code>rwxr-xr-x</code>），去掉了组和其他用户的写权限</li>
+</ul>
+</li>
+</ul>
+<p><strong>示例：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前 umask(0002)</span></span><br><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ <span class="built_in">umask</span></span><br><span class="line">0002</span><br><span class="line">[root@172-12-0-1 ~]# <span class="built_in">umask</span></span><br><span class="line">0022</span><br><span class="line"></span><br><span class="line"><span class="comment"># 符号类型显示(rwx)</span></span><br><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ <span class="built_in">umask</span> -S</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置 umask 为 027</span></span><br><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ <span class="built_in">umask</span> 027</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新创建的文件权限为 640（666 - 027 = 640），目录权限为 750（777 - 027 = 750）</span></span><br><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ <span class="built_in">touch</span> myfile</span><br><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ <span class="built_in">mkdir</span> mydir</span><br><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ <span class="built_in">ls</span> -l myfile mydir</span><br></pre></td></tr></table></figure>
+
+<h3 id="文件隐藏权限"><a href="#文件隐藏权限" class="headerlink" title="文件隐藏权限"></a>文件隐藏权限</h3><p><code>chattr</code> 是一个 Linux 命令，用于更改文件和目录的属性。这些属性提供了额外的控制和保护机制，能够影响文件或目录的行为，尤其是在系统维护和安全方面。 <code>chattr</code> 命令的属性主要用于防止文件被修改、删除或重命名等操作。</p>
+<p><strong>常用选项</strong></p>
+<ul>
+<li>**<code>+</code>**：添加一个或多个属性。</li>
+<li>**<code>-</code>**：删除一个或多个属性。</li>
+<li>**<code>=</code>**：设置属性，替换现有属性。</li>
+</ul>
+<p><strong>常见属性</strong></p>
+<ul>
+<li>**<code>A</code>**：存取此文件（或目录）时，存取时间 atime 将不会被修改，可避免 I&#x2F;O 较慢的机器过度的存取磁盘。（目前建议使用文件系统挂载参数处理这个项目）</li>
+<li>**<code>S</code>**：一般文件是非同步写入磁盘的，加上 这个属性后进行任何文件的修改，会同步写入磁盘中</li>
+<li>**<code>a</code>**：附加属性。文件只能被追加内容，不能被修改或删除（适用于文件），只有root 才能设置该属性</li>
+<li>**<code>c</code>**：压缩属性。启用文件系统的压缩功能（适用于大文件，具体取决于文件系统），读取的时候将会自动解压缩</li>
+<li>**<code>d</code>**：当 dump 程序被执行的时候，可使该文件（或目录）不会被 dump 备份</li>
+<li>**<code>i</code>**：不可变属性。文件无法被修改、删除、重命名，也不能被创建链接（适用于文件），只有root 才能设置该属性</li>
+<li>**<code>s</code>**：安全删除属性。删除文件时，会确保文件数据被完全擦除（适用于文件）</li>
+<li>**<code>u</code>**：在文件被删除后，保留文件数据的备份（适用于文件）</li>
+</ul>
+<p>xfx文件系统仅支持**<code>AadiS</code>**这几个选项参数</p>
+<h4 id="查看文件属性"><a href="#查看文件属性" class="headerlink" title="查看文件属性"></a>查看文件属性</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ lsattr filename</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改文件属性"><a href="#修改文件属性" class="headerlink" title="修改文件属性"></a><strong>修改文件属性</strong></h4><p><strong>1. 添加属性</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将不可变属性添加到文件</span></span><br><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ <span class="built_in">sudo</span> chattr +i filename</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 删除属性</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bash复制代码# 删除不可变属性</span><br><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ <span class="built_in">sudo</span> chattr -i filename</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. 设置属性</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置附加属性</span></span><br><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ <span class="built_in">sudo</span> chattr +a filename</span><br></pre></td></tr></table></figure>
+
+<p><strong>常见使用场景</strong></p>
+<ul>
+<li><strong>保护重要文件</strong>：使用不可变属性保护关键系统文件或配置文件，防止意外修改或删除。</li>
+<li><strong>增强安全性</strong>：使用 <code>chattr</code> 命令可以增强文件系统的安全性，特别是在关键系统文件和配置文件的管理中。</li>
+</ul>
+<h2 id="文件特殊权限：-SUID-SGID-SBIT"><a href="#文件特殊权限：-SUID-SGID-SBIT" class="headerlink" title="文件特殊权限： SUID, SGID, SBIT"></a>文件特殊权限： SUID, SGID, SBIT</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@172-12-0-1 ~]# <span class="built_in">ls</span> -ld /tmp; <span class="built_in">ls</span> -l /usr/bin/passwd</span><br><span class="line">drwxrwxrwt. 11 root root 8192 8月  13 16:19 /tmp</span><br><span class="line">-rwsr-xr-x. 1 root root 33600 4月   7 2020 /usr/bin/passwd</span><br></pre></td></tr></table></figure>
+
+<p>注意这里的<code>s</code>和<code>t</code>，后面要考的</p>
+<ul>
+<li><p>Set SID</p>
+<p>当 <code>s</code> 这个标志出现在<strong>文件</strong>所有者的 x 权限上时，被称为 Set UID，简称为 SUID 的特殊权限</p>
+<ul>
+<li>SUID 权限仅对二进制程序（binary program）有效</li>
+<li>执行者对于该程序需要具有 x 的可执行权限</li>
+<li>本权限仅在执行该程序的过程中有效（run-time）</li>
+<li>执行者将具有该程序拥有者（owner）的权限</li>
+</ul>
+<p>比如 <code>passwd</code>这个命令，普通用户具有 <code>x</code>权限，所以也可以执行，但是无法读取</p>
+</li>
+<li><p>Set GID</p>
+<ul>
+<li><p>当 <code>s</code> 标志在<code>group</code>的 x 权限时，称为 Set GID，简称为SGID</p>
+<ul>
+<li>SGID 可以针对<strong>文件或目录</strong>来设置</li>
+<li>作用在文件上时<ol>
+<li>SGID 对二进制程序有用</li>
+<li>以文件所属组的权限执行，而不是执行者的组权限</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /usr/bin/locate 会去搜索 /var/lib/mlocate/mlocate.db 这个文件的内容</span></span><br><span class="line"><span class="comment"># 使用 test这个帐号去执行locate 时，那 test将会取得slocate 群组的支持</span></span><br><span class="line">[root@172-12-0-1 /]# ll /usr/bin/locate /var/lib/mlocate/mlocate.db</span><br><span class="line">-rwx--s--x 1 root slocate   48552 5月  11 2019 /usr/bin/locate</span><br><span class="line">-rw-r----- 1 root slocate 4093713 8月  14 09:33 /var/lib/mlocate/mlocate.db</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>作用在目录上时<ol>
+<li>新创建的文件和子目录会继承该目录的组，而不是创建者的组</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Sticky Bit</p>
+<ul>
+<li>SBIT 只针对目录有效<ul>
+<li>当使用者对于此目录具有 <code>w, x</code> 权限，亦即具有写入的权限时</li>
+<li>当使用者在该目录下创建文件或目录时，仅有自己与 root 才有权力删除该文件（即无法删除他人的文件）</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@172-12-0-1 /]# <span class="built_in">ls</span> -dl /tmp/</span><br><span class="line">drwxrwxrwt. 3 root root 85 8月  14 09:56 /tmp/</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="SUID-SGID-SBIT权限设置"><a href="#SUID-SGID-SBIT权限设置" class="headerlink" title="SUID&#x2F;SGID&#x2F;SBIT权限设置"></a>SUID&#x2F;SGID&#x2F;SBIT权限设置</h3><h4 id="权限数值表示"><a href="#权限数值表示" class="headerlink" title="权限数值表示"></a>权限数值表示</h4><ul>
+<li><code>SUID</code>：4</li>
+<li><code>SGID</code>：2</li>
+<li><code>SBIT</code>：1</li>
+</ul>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>设置权限<code>-rwsr-xr-x</code></p>
+<ul>
+<li>数字模式，<code>chmod 4755 filename</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@172-12-0-1 /]# <span class="built_in">cd</span> /tmp</span><br><span class="line">[root@172-12-0-1 /tmp]# <span class="built_in">touch</span> <span class="built_in">test</span></span><br><span class="line"><span class="comment"># 加入SUID 权限</span></span><br><span class="line">[root@172-12-0-1 /tmp]# <span class="built_in">chmod</span> 4755 <span class="built_in">test</span></span><br><span class="line">[root@172-12-0-1 /tmp]# ll <span class="built_in">test</span></span><br><span class="line">-rwsr-xr-x 1 root root  0 8月  14 10:07 <span class="built_in">test</span></span><br><span class="line"><span class="comment"># 加入SUID/SGID 权限</span></span><br><span class="line">[root@172-12-0-1 /tmp]# <span class="built_in">chmod</span> 6755 <span class="built_in">test</span></span><br><span class="line">[root@172-12-0-1 /tmp]# ll <span class="built_in">test</span></span><br><span class="line">-rwsr-sr-x 1 root root  0 8月  14 10:07 <span class="built_in">test</span></span><br><span class="line"><span class="comment"># 加入 SBIT 权限</span></span><br><span class="line">[root@172-12-0-1 /tmp]# <span class="built_in">chmod</span> 1755 <span class="built_in">test</span></span><br><span class="line">[root@172-12-0-1 /tmp]# ll <span class="built_in">test</span></span><br><span class="line">-rwxr-xr-t 1 root root 0 8月  14 10:07 <span class="built_in">test</span></span><br><span class="line"><span class="comment"># 具有空的 SUID/SGID 权限</span></span><br><span class="line">[root@172-12-0-1 /tmp]# <span class="built_in">chmod</span> 7666 <span class="built_in">test</span></span><br><span class="line">[root@172-12-0-1 /tmp]# <span class="built_in">ls</span> -l <span class="built_in">test</span></span><br><span class="line">-rwSrwSrwT 1 root root  0 8月  14 10:07 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>最后一个为什么会出现大写的 S 与 T 呢？</p>
+<p>因为 s 与 t都是取代 x 这个权限的，设置 7666 权限时user、group、others都没有x的权限，所以，这个 S, T 代表的就是没权限执行（文件所有者都没权限执行，其他人肯定不能用了）</p>
+</blockquote>
+<ul>
+<li>符号模式<ul>
+<li>SUID ： u+s</li>
+<li>SGID ： g+s</li>
+<li>SBIT  ： o+t</li>
+</ul>
+</li>
+</ul>
+<h2 id="文件查找：-locate"><a href="#文件查找：-locate" class="headerlink" title="文件查找： locate"></a>文件查找： locate</h2><ul>
+<li>安装</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装lcoate</span></span><br><span class="line">[root@172-12-0-1 ~]# yum install mlocate</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>更新数据库</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 根据 /etc/updatedb.conf 的设置去搜寻系统硬盘内的文件名，并更新 /var/lib/mlocate 内的数据库文件</span></span><br><span class="line">[root@172-12-0-1 ~]# updatedb</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查找文件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 /var/lib/mlocate 中查找</span></span><br><span class="line">[root@172-12-0-1 ~]# locate filename</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看文件类型：-file"><a href="#查看文件类型：-file" class="headerlink" title="查看文件类型： file"></a>查看文件类型： file</h2><p>想要知道某个文件的基本数据，例如是属于 ASCII 或者是 data 文件、 binary，且其中有没有使用到动态函数库（share library）等，可以使用file命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ASCII 的纯文本文件</span></span><br><span class="line">[root@172-12-0-1 ~]# file ~/.bashrc </span><br><span class="line">/root/.bashrc: ASCII text</span><br><span class="line"><span class="comment"># 可执行文件的数据，包括这个文件的 suid 权限、相容于 Intel x86-64 等级的硬件平台，使用的是 Linux 核心 3.2.0 的动态函数库链接等</span></span><br><span class="line">[root@172-12-0-1 ~]# file /usr/bin/passwd</span><br><span class="line">/usr/bin/passwd: setuid ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, <span class="keyword">for</span> GNU/Linux 3.2.0, BuildID[sha1]=87e17c1d9b2e20d7e8aeab9115074375eec5e8e1, stripped</span><br><span class="line"><span class="comment"># data 文件</span></span><br><span class="line">[root@172-12-0-1 ~]# file /var/lib/mlocate/mlocate.db</span><br><span class="line">/var/lib/mlocate/mlocate.db: mlocate database, version 0, require visibility, root /</span><br></pre></td></tr></table></figure>
+
+<h2 id="指令与文件的搜索"><a href="#指令与文件的搜索" class="headerlink" title="指令与文件的搜索"></a>指令与文件的搜索</h2><h3 id="指令文件名的搜索"><a href="#指令文件名的搜索" class="headerlink" title="指令文件名的搜索"></a>指令文件名的搜索</h3><ul>
+<li>which：用于查找命令的可执行文件路径。它会输出在 <code>PATH</code> 环境变量中找到的第一个匹配命令的位置</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查找 ifconfig 执行文件</span></span><br><span class="line">[root@172-12-0-1 ~]# <span class="built_in">which</span> ifconfig </span><br><span class="line">/usr/sbin/ifconfig</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找 history 执行文件，发现找不到，是因为history是 bash 内置的指令，可以通过type搜索</span></span><br><span class="line">[root@172-12-0-1 ~]# <span class="built_in">which</span> <span class="built_in">history</span> </span><br><span class="line">/usr/bin/which: no <span class="built_in">history</span> <span class="keyword">in</span> (/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>type：提供更多的详细信息，包括命令的类型（内置命令、别名、函数、外部命令等）。它不仅显示命令的路径，还可以显示命令的类型和其他相关信息</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@172-12-0-1 ~]# <span class="built_in">type</span> <span class="built_in">history</span> </span><br><span class="line"><span class="built_in">history</span> 是 shell 内建</span><br></pre></td></tr></table></figure>
+
+<h3 id="文件文件名搜索"><a href="#文件文件名搜索" class="headerlink" title="文件文件名搜索"></a>文件文件名搜索</h3><ul>
+<li>whereis：由一些特定的目录中寻找文件文件名，可以通过 <code>whereis -l</code>来查看搜索哪些目录</li>
+<li>locate &#x2F; updatedb：[Ctrl点击跳转到locate](#文件查找： locate)</li>
+<li>find：直接搜索硬盘，速度慢，但功能强大，使用 <code>man find</code>查看更多用法</li>
+</ul>
+<h1 id="五、Linux磁盘与文件系统管理"><a href="#五、Linux磁盘与文件系统管理" class="headerlink" title="五、Linux磁盘与文件系统管理"></a>五、Linux磁盘与文件系统管理</h1><p>Linux 最传统的磁盘文件系统（filesystem）使用的是 EXT2，文件系统创建在磁盘上边，前面已经有说过磁盘的基本组成了（<a href="#%E7%A1%AC%E7%9B%98%E5%92%8C%E5%82%A8%E5%AD%98%E8%AE%BE%E5%A4%87">跳转磁盘</a>），本章重点在于 inode, block 还有 superblock 等文件系统的基本部分。</p>
 <p>九、文件与文件系统的压缩、打包与备份</p>
 <p>十、Vim程序编辑器</p>
 <p>十一、认识与学习BASH</p>
@@ -909,7 +1418,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%A6%82%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">一、计算机概论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU-%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">CPU 架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU%E7%9A%84%E5%B7%A5%E4%BD%9C%E9%A2%91%E7%8E%87"><span class="nav-number">1.1.1.</span> <span class="nav-text">CPU的工作频率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E9%A2%91%E4%B8%8E%E5%80%8D%E9%A2%91"><span class="nav-number">1.1.2.</span> <span class="nav-text">外频与倍频</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">1.2.</span> <span class="nav-text">内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DRAM"><span class="nav-number">1.2.1.</span> <span class="nav-text">DRAM</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E5%AE%B9%E9%87%8F"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">内存容量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E9%80%9A%E9%81%93"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">多通道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%BF%A1%E9%81%93"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">内存信道</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E5%92%8C%E5%8A%9F%E8%83%BD"><span class="nav-number">1.2.1.3.1.</span> <span class="nav-text">作用和功能</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU%E5%86%85%E9%83%A8%E9%AB%98%E9%80%9F%E7%BC%93%E5%AD%98"><span class="nav-number">1.2.2.</span> <span class="nav-text">CPU内部高速缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">层次结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%91%BD%E4%B8%AD%E5%92%8C%E5%A4%B1%E6%95%88"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">命中和失效</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROM%EF%BC%88Read-Only-Memory%EF%BC%8C%E5%8F%AA%E8%AF%BB%E5%AD%98%E5%82%A8%E5%99%A8%EF%BC%89"><span class="nav-number">1.2.3.</span> <span class="nav-text">ROM（Read-Only Memory，只读存储器）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E5%8D%A1"><span class="nav-number">1.3.</span> <span class="nav-text">显卡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PCIe"><span class="nav-number">1.3.1.</span> <span class="nav-text">PCIe</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AC%E7%9B%98%E5%92%8C%E5%82%A8%E5%AD%98%E8%AE%BE%E5%A4%87"><span class="nav-number">1.4.</span> <span class="nav-text">硬盘和储存设备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E5%92%8C%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">结构和工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E5%92%8C%E7%A3%81%E5%A4%B4"><span class="nav-number">1.4.0.1.1.</span> <span class="nav-text">磁盘和磁头</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="nav-number">1.4.0.1.2.</span> <span class="nav-text">数据存储原理：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-number">1.4.0.1.3.</span> <span class="nav-text">工作过程：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%B1%BB"><span class="nav-number">1.4.0.2.</span> <span class="nav-text">分类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E7%A1%AC%E7%9B%98%E9%A9%B1%E5%8A%A8%E5%99%A8%EF%BC%88HDD%EF%BC%89%EF%BC%9A"><span class="nav-number">1.4.0.2.1.</span> <span class="nav-text">传统硬盘驱动器（HDD）：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98%EF%BC%88SSD%EF%BC%89%EF%BC%9A"><span class="nav-number">1.4.0.2.2.</span> <span class="nav-text">固态硬盘（SSD）：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E5%92%8C%E8%AE%BF%E9%97%AE%E7%9A%84%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84"><span class="nav-number">1.4.0.3.</span> <span class="nav-text">数据存储和访问的物理结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%87%E5%8C%BA%EF%BC%88Sector%EF%BC%89"><span class="nav-number">1.4.0.3.1.</span> <span class="nav-text">扇区（Sector）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A3%81%E9%81%93%EF%BC%88Track%EF%BC%89"><span class="nav-number">1.4.0.3.2.</span> <span class="nav-text">磁道（Track）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%B1%E9%9D%A2%EF%BC%88Cylinder%EF%BC%89"><span class="nav-number">1.4.0.3.3.</span> <span class="nav-text">柱面（Cylinder）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E5%B8%83%E5%B1%80%E5%92%8C%E4%BC%98%E5%8C%96"><span class="nav-number">1.4.0.3.4.</span> <span class="nav-text">物理布局和优化</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">1.4.0.4.</span> <span class="nav-text">分区表</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#MBR%EF%BC%88Master-Boot-Record%EF%BC%89"><span class="nav-number">1.4.0.4.1.</span> <span class="nav-text">MBR（Master Boot Record）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GPT%EF%BC%88GUID-Partition-Table%EF%BC%89"><span class="nav-number">1.4.0.4.2.</span> <span class="nav-text">GPT（GUID Partition Table）</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Linux%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.</span> <span class="nav-text">二、Linux学习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E6%A0%91%E7%BB%93%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">目录树结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%EF%BC%88%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%8E%E7%9B%AE%E5%BD%95%E6%A0%91%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">挂载（文件系统与目录树的关系）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85"><span class="nav-number">2.3.</span> <span class="nav-text">Linux系统安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Kickstart-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">2.3.1.</span> <span class="nav-text">Kickstart 配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8"><span class="nav-number">2.3.1.1.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.3.1.2.</span> <span class="nav-text">使用步骤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.4.</span> <span class="nav-text">命令格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%8C%87%E4%BB%A4"><span class="nav-number">2.5.</span> <span class="nav-text">基础指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98"><span class="nav-number">2.6.</span> <span class="nav-text">中文乱码问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E8%AF%AD%E8%A8%80"><span class="nav-number">2.6.1.</span> <span class="nav-text">修改语言</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E5%99%A8%EF%BC%9Abc"><span class="nav-number">2.7.</span> <span class="nav-text">计算器：bc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tab%E4%BB%A3%E7%A0%81%E8%A1%A5%E5%85%A8"><span class="nav-number">2.8.</span> <span class="nav-text">Tab代码补全</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E8%A1%A5%E5%85%A8"><span class="nav-number">2.8.1.</span> <span class="nav-text">代码补全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0-%E9%80%89%E9%A1%B9%E8%A1%A5%E9%BD%90"><span class="nav-number">2.8.2.</span> <span class="nav-text">参数&#x2F;选项补齐</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%91%E5%89%8D%E5%90%91%E5%90%8E%E7%BF%BB%E9%A1%B5"><span class="nav-number">2.9.</span> <span class="nav-text">向前向后翻页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3"><span class="nav-number">2.10.</span> <span class="nav-text">命令帮助文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E7%9A%84help%E6%B1%82%E5%8A%A9"><span class="nav-number">2.10.1.</span> <span class="nav-text">指令的help求助</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#man-page"><span class="nav-number">2.10.2.</span> <span class="nav-text">man page</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%90%9C%E5%AF%BB%E7%89%B9%E5%AE%9A%E6%8C%87%E4%BB%A4-%E6%96%87%E4%BB%B6%E7%9A%84man-page%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3"><span class="nav-number">2.10.2.1.</span> <span class="nav-text">搜寻特定指令&#x2F;文件的man page说明文档</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#info-page"><span class="nav-number">2.10.3.</span> <span class="nav-text">info page</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%9C%89%E7%94%A8%E7%9A%84%E6%96%87%E4%BB%B6%EF%BC%88documents%EF%BC%89"><span class="nav-number">2.10.4.</span> <span class="nav-text">其他有用的文件（documents）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E6%9C%BA"><span class="nav-number">2.11.</span> <span class="nav-text">关机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81Linux%E7%9A%84%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">三、Linux的文件权限与目录配置</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%A6%82%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">一、计算机概论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU-%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">CPU 架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU%E7%9A%84%E5%B7%A5%E4%BD%9C%E9%A2%91%E7%8E%87"><span class="nav-number">1.1.1.</span> <span class="nav-text">CPU的工作频率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E9%A2%91%E4%B8%8E%E5%80%8D%E9%A2%91"><span class="nav-number">1.1.2.</span> <span class="nav-text">外频与倍频</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">1.2.</span> <span class="nav-text">内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DRAM"><span class="nav-number">1.2.1.</span> <span class="nav-text">DRAM</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E5%AE%B9%E9%87%8F"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">内存容量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E9%80%9A%E9%81%93"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">多通道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%BF%A1%E9%81%93"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">内存信道</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E5%92%8C%E5%8A%9F%E8%83%BD"><span class="nav-number">1.2.1.3.1.</span> <span class="nav-text">作用和功能</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU%E5%86%85%E9%83%A8%E9%AB%98%E9%80%9F%E7%BC%93%E5%AD%98"><span class="nav-number">1.2.2.</span> <span class="nav-text">CPU内部高速缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">层次结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%91%BD%E4%B8%AD%E5%92%8C%E5%A4%B1%E6%95%88"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">命中和失效</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROM%EF%BC%88Read-Only-Memory%EF%BC%8C%E5%8F%AA%E8%AF%BB%E5%AD%98%E5%82%A8%E5%99%A8%EF%BC%89"><span class="nav-number">1.2.3.</span> <span class="nav-text">ROM（Read-Only Memory，只读存储器）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E5%8D%A1"><span class="nav-number">1.3.</span> <span class="nav-text">显卡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PCIe"><span class="nav-number">1.3.1.</span> <span class="nav-text">PCIe</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AC%E7%9B%98%E5%92%8C%E5%82%A8%E5%AD%98%E8%AE%BE%E5%A4%87"><span class="nav-number">1.4.</span> <span class="nav-text">硬盘和储存设备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E5%92%8C%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">结构和工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E5%92%8C%E7%A3%81%E5%A4%B4"><span class="nav-number">1.4.0.1.1.</span> <span class="nav-text">磁盘和磁头</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="nav-number">1.4.0.1.2.</span> <span class="nav-text">数据存储原理：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-number">1.4.0.1.3.</span> <span class="nav-text">工作过程：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%B1%BB"><span class="nav-number">1.4.0.2.</span> <span class="nav-text">分类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E7%A1%AC%E7%9B%98%E9%A9%B1%E5%8A%A8%E5%99%A8%EF%BC%88HDD%EF%BC%89%EF%BC%9A"><span class="nav-number">1.4.0.2.1.</span> <span class="nav-text">传统硬盘驱动器（HDD）：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98%EF%BC%88SSD%EF%BC%89%EF%BC%9A"><span class="nav-number">1.4.0.2.2.</span> <span class="nav-text">固态硬盘（SSD）：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E5%92%8C%E8%AE%BF%E9%97%AE%E7%9A%84%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84"><span class="nav-number">1.4.0.3.</span> <span class="nav-text">数据存储和访问的物理结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%87%E5%8C%BA%EF%BC%88Sector%EF%BC%89"><span class="nav-number">1.4.0.3.1.</span> <span class="nav-text">扇区（Sector）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A3%81%E9%81%93%EF%BC%88Track%EF%BC%89"><span class="nav-number">1.4.0.3.2.</span> <span class="nav-text">磁道（Track）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%B1%E9%9D%A2%EF%BC%88Cylinder%EF%BC%89"><span class="nav-number">1.4.0.3.3.</span> <span class="nav-text">柱面（Cylinder）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E5%B8%83%E5%B1%80%E5%92%8C%E4%BC%98%E5%8C%96"><span class="nav-number">1.4.0.3.4.</span> <span class="nav-text">物理布局和优化</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">1.4.0.4.</span> <span class="nav-text">分区表</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#MBR%EF%BC%88Master-Boot-Record%EF%BC%89"><span class="nav-number">1.4.0.4.1.</span> <span class="nav-text">MBR（Master Boot Record）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GPT%EF%BC%88GUID-Partition-Table%EF%BC%89"><span class="nav-number">1.4.0.4.2.</span> <span class="nav-text">GPT（GUID Partition Table）</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Linux%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.</span> <span class="nav-text">二、Linux学习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E6%A0%91%E7%BB%93%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">目录树结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%EF%BC%88%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%8E%E7%9B%AE%E5%BD%95%E6%A0%91%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">挂载（文件系统与目录树的关系）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85"><span class="nav-number">2.3.</span> <span class="nav-text">Linux系统安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Kickstart-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">2.3.1.</span> <span class="nav-text">Kickstart 配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8"><span class="nav-number">2.3.1.1.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.3.1.2.</span> <span class="nav-text">使用步骤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.4.</span> <span class="nav-text">命令格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%8C%87%E4%BB%A4"><span class="nav-number">2.5.</span> <span class="nav-text">基础指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98"><span class="nav-number">2.6.</span> <span class="nav-text">中文乱码问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E8%AF%AD%E8%A8%80"><span class="nav-number">2.6.1.</span> <span class="nav-text">修改语言</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E5%99%A8%EF%BC%9Abc"><span class="nav-number">2.7.</span> <span class="nav-text">计算器：bc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tab%E4%BB%A3%E7%A0%81%E8%A1%A5%E5%85%A8"><span class="nav-number">2.8.</span> <span class="nav-text">Tab代码补全</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E8%A1%A5%E5%85%A8"><span class="nav-number">2.8.1.</span> <span class="nav-text">代码补全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0-%E9%80%89%E9%A1%B9%E8%A1%A5%E9%BD%90"><span class="nav-number">2.8.2.</span> <span class="nav-text">参数&#x2F;选项补齐</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%91%E5%89%8D%E5%90%91%E5%90%8E%E7%BF%BB%E9%A1%B5"><span class="nav-number">2.9.</span> <span class="nav-text">向前向后翻页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3"><span class="nav-number">2.10.</span> <span class="nav-text">命令帮助文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E7%9A%84help%E6%B1%82%E5%8A%A9"><span class="nav-number">2.10.1.</span> <span class="nav-text">指令的help求助</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#man-page"><span class="nav-number">2.10.2.</span> <span class="nav-text">man page</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%90%9C%E5%AF%BB%E7%89%B9%E5%AE%9A%E6%8C%87%E4%BB%A4-%E6%96%87%E4%BB%B6%E7%9A%84man-page%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3"><span class="nav-number">2.10.2.1.</span> <span class="nav-text">搜寻特定指令&#x2F;文件的man page说明文档</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#info-page"><span class="nav-number">2.10.3.</span> <span class="nav-text">info page</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%9C%89%E7%94%A8%E7%9A%84%E6%96%87%E4%BB%B6%EF%BC%88documents%EF%BC%89"><span class="nav-number">2.10.4.</span> <span class="nav-text">其他有用的文件（documents）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E6%9C%BA"><span class="nav-number">2.11.</span> <span class="nav-text">关机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81Linux%E7%9A%84%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">三、Linux的文件权限与目录配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90"><span class="nav-number">3.1.</span> <span class="nav-text">文件权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ls-al-%E6%98%BE%E7%A4%BA%E5%AD%97%E6%AE%B5%E8%A7%A3%E9%87%8A"><span class="nav-number">3.1.1.</span> <span class="nav-text">ls -al 显示字段解释</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E5%92%8C%E6%9D%83%E9%99%90-%E7%AC%AC1%E4%B8%AA%E5%8F%82%E6%95%B0"><span class="nav-number">3.1.1.1.</span> <span class="nav-text">文件类型和权限(第1个参数)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AC%E9%93%BE%E6%8E%A5%E6%95%B0%E9%87%8F%EF%BC%88%E7%AC%AC2%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%89"><span class="nav-number">3.1.1.2.</span> <span class="nav-text">硬链接数量（第2个参数）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%80%E6%9C%89%E8%80%85%EF%BC%88%E7%AC%AC3%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%89"><span class="nav-number">3.1.1.3.</span> <span class="nav-text">所有者（第3个参数）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%80%E5%B1%9E%E7%BB%84%EF%BC%88%E7%AC%AC4%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%89"><span class="nav-number">3.1.1.4.</span> <span class="nav-text">所属组（第4个参数）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%EF%BC%88%E7%AC%AC5%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%89"><span class="nav-number">3.1.1.5.</span> <span class="nav-text">文件大小（第5个参数）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4%EF%BC%88%E7%AC%AC6%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%89"><span class="nav-number">3.1.1.6.</span> <span class="nav-text">文件修改时间（第6个参数）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%90%8D%EF%BC%88%E7%AC%AC7%E4%B8%AA%E5%8F%82%E6%95%B0%EF%BC%89"><span class="nav-number">3.1.1.7.</span> <span class="nav-text">文件名（第7个参数）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%B9%E5%8F%98%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7%E5%92%8C%E6%9D%83%E9%99%90"><span class="nav-number">3.2.</span> <span class="nav-text">改变文件属性和权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FHS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.3.</span> <span class="nav-text">FHS文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E7%9B%AE%E5%BD%95%E5%92%8C%E5%85%B6%E5%90%AB%E4%B9%89"><span class="nav-number">3.3.1.</span> <span class="nav-text">主要目录和其含义</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">四、Linux文件与目录管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%9D%E5%AF%B9%E8%B7%AF%E5%BE%84%E4%B8%8E%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84"><span class="nav-number">4.1.</span> <span class="nav-text">绝对路径与相对路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E7%9A%84%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C"><span class="nav-number">4.2.</span> <span class="nav-text">目录的相关操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84%E5%8F%98%E9%87%8F%EF%BC%88%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%EF%BC%89%EF%BC%9A-PATH"><span class="nav-number">4.3.</span> <span class="nav-text">可执行文件路径变量（环境变量）：$PATH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E6%9F%A5%E8%AF%A2"><span class="nav-number">4.4.</span> <span class="nav-text">文件内容查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E6%97%B6%E9%97%B4%E6%88%96%E5%88%9B%E5%BB%BA%E6%96%B0%E6%96%87%E4%BB%B6%EF%BC%9Atouch"><span class="nav-number">4.5.</span> <span class="nav-text">修改文件时间或创建新文件：touch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#touch"><span class="nav-number">4.5.1.</span> <span class="nav-text">touch</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8-1"><span class="nav-number">4.5.1.1.</span> <span class="nav-text">作用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%9A%84%E9%BB%98%E8%AE%A4%E6%9D%83%E9%99%90%E4%B8%8E%E9%9A%90%E8%97%8F%E6%9D%83%E9%99%90"><span class="nav-number">4.6.</span> <span class="nav-text">文件与目录的默认权限与隐藏权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E9%BB%98%E8%AE%A4%E6%9D%83%E9%99%90%EF%BC%9Aumask"><span class="nav-number">4.6.1.</span> <span class="nav-text">文件默认权限：umask</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E9%9A%90%E8%97%8F%E6%9D%83%E9%99%90"><span class="nav-number">4.6.2.</span> <span class="nav-text">文件隐藏权限</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7"><span class="nav-number">4.6.2.1.</span> <span class="nav-text">查看文件属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7"><span class="nav-number">4.6.2.2.</span> <span class="nav-text">修改文件属性</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90%EF%BC%9A-SUID-SGID-SBIT"><span class="nav-number">4.7.</span> <span class="nav-text">文件特殊权限： SUID, SGID, SBIT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SUID-SGID-SBIT%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE"><span class="nav-number">4.7.1.</span> <span class="nav-text">SUID&#x2F;SGID&#x2F;SBIT权限设置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E6%95%B0%E5%80%BC%E8%A1%A8%E7%A4%BA"><span class="nav-number">4.7.1.1.</span> <span class="nav-text">权限数值表示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">4.7.1.2.</span> <span class="nav-text">示例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%9F%A5%E6%89%BE%EF%BC%9A-locate"><span class="nav-number">4.8.</span> <span class="nav-text">文件查找： locate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%EF%BC%9A-file"><span class="nav-number">4.9.</span> <span class="nav-text">查看文件类型： file</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E4%B8%8E%E6%96%87%E4%BB%B6%E7%9A%84%E6%90%9C%E7%B4%A2"><span class="nav-number">4.10.</span> <span class="nav-text">指令与文件的搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E6%96%87%E4%BB%B6%E5%90%8D%E7%9A%84%E6%90%9C%E7%B4%A2"><span class="nav-number">4.10.1.</span> <span class="nav-text">指令文件名的搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%96%87%E4%BB%B6%E5%90%8D%E6%90%9C%E7%B4%A2"><span class="nav-number">4.10.2.</span> <span class="nav-text">文件文件名搜索</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81Linux%E7%A3%81%E7%9B%98%E4%B8%8E%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text">五、Linux磁盘与文件系统管理</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
