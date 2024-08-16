@@ -2126,6 +2126,413 @@ graph LR
 <li>find：直接搜索硬盘，速度慢，但功能强大，使用 <code>man find</code>查看更多用法</li>
 </ul>
 <h1 id="五、Linux磁盘与文件系统管理"><a href="#五、Linux磁盘与文件系统管理" class="headerlink" title="五、Linux磁盘与文件系统管理"></a>五、Linux磁盘与文件系统管理</h1><p>Linux 最传统的磁盘文件系统（filesystem）使用的是 EXT2，文件系统创建在磁盘上边，前面已经有说过磁盘的基本组成了（<a href="#%E7%A1%AC%E7%9B%98%E5%92%8C%E5%82%A8%E5%AD%98%E8%AE%BE%E5%A4%87">跳转磁盘</a>），本章重点在于 inode, block 还有 superblock 等文件系统的基本部分。</p>
+<blockquote>
+<p>为什么磁盘分区完毕后还需要进行格式化（format），之后操作系统才能够使用这个文件系统？</p>
+<p>这是因为每种操作系统所设置的文件属性&#x2F;权限并不相同，为了存放这些文件所需的数据，因此就需要将分区进行格式化，以成为操作系统能够利用的文件系统格式（filesystem）</p>
+</blockquote>
+<blockquote>
+<p>传统的一个分区只能被格式化为一个文件系统，但由于新技术的应用，LVM与软件磁盘阵列（software raid）技术可以将一个分区格式化为多个文件系统，也能够将多个分区合成一个文件系统。所以目前我们在格式化时已经不再说成针对 <code>partition</code> 来格式化了，通常可以称呼一个可被挂载的数据为一个文件系统而不是一个分区。</p>
+</blockquote>
+<p>文件数据除了文件实际内容外，还有有非常多的属性，例如 Linux 操作系统的文件权限（rwx）与文件属性（拥有者、群组、时间参数等）。文件系统通常会将这两部份的数据分别存放在不同的区块，<strong>权限与属性</strong>放置到 <code>inode</code> 中，<strong>实际数据</strong>则放置到 <code>data block</code> 区块中。另外，还有一个超级区块（<code>superblock</code>）会记录整个文件系统的整体信息，包括 inode 与 block 的总量、使用量、剩余量等。</p>
+<p>每个 <code>inode</code> 与 <code>block</code> 都有编号，这三个数据的意义可以简略说明如下：</p>
+<ul>
+<li>superblock：记录此 <code>filesystem</code> 的整体信息，包括<code>inode/block</code>的总量、使用量、剩余量，以及文件系统的格式与相关信息等</li>
+<li>inode：记录文件的属性，一个文件占用一个inode，同时记录此文件的数据所在的 <code>block</code>号码</li>
+<li>block：实际记录文件的内容，若文件太大时，会占用多个 block</li>
+</ul>
+<p>由inode可以找到此文件的数据存放的block块，这种数据存取方式称为<strong>索引式文件系统</strong>（indexed allocation）</p>
+<blockquote>
+<p>U盘的文件系统一般是FAT格式，FAT 这种格式的文件系统并没有 inode 存在，所以 FAT 没有办法将这个文件的所有 block 在一开始就读取出来。每个 block 号码都记录在前一个 block 当中（1-&gt;7-&gt;4-&gt;15），如果同一个文件数据写入的 block 分散的太厉害，则磁头将无法在磁盘转一圈就读到所有的数据，因此磁盘就会多转好几圈才能完整的读取到这个文件的内容。</p>
+<p>所以需要隔三岔五的<strong>磁盘重组</strong>一下</p>
+<p>磁盘重组（也称为磁盘整理或碎片整理）是一个用于优化存储设备性能的过程。在此过程中，文件系统会重新组织存储在磁盘上的文件，使得文件的各个部分尽可能地连续存储，以减少磁头移动的时间，从而提高磁盘读写效率。</p>
+</blockquote>
+<h2 id="Ext2文件系统-inode"><a href="#Ext2文件系统-inode" class="headerlink" title="Ext2文件系统(inode)"></a>Ext2文件系统(inode)</h2><p>文件系统一开始就将 inode 与 block 规划好了，除非重新格式化（或者利用 <code>resize2fs</code> 等指令变更文件系统大小），否则 inode 与 block 固定后就不再变动。但是如果我的文件系统高达数百GB时，将所有的 inode 与 block 放置在一起将是很不智的决定，因为 inode 与 block 的数量太庞大，不容易管理。</p>
+<p>因此 Ext2 文件系统在格式化的时候基本上是区分为多个<strong>区块群组</strong>（<code>blockgroup</code>）的，每个区块群组都有<strong>独立</strong>的 inode&#x2F;block&#x2F;superblock 系统，如下图所示</p>
+<img src="https://imgos.cn/2024/08/15/66bd629e6cf67.png" alt="图片描述" width="600" height="300">
+
+<p>在整体的规划当中，文件系统最前面有一个开机扇区（boot sector），这个开机扇区可以安装开机管理程序，这是个非常重要的设计，我们能够将不同的开机管理程序安装到个别的文件系统最前端，而不用覆盖整颗磁盘唯一的 MBR，这样才能够制作出多重开机的环境。</p>
+<h2 id="Data-Block（数据区块）"><a href="#Data-Block（数据区块）" class="headerlink" title="Data Block（数据区块）"></a>Data Block（数据区块）</h2><p>用来放置<strong>文件内容</strong>，在 Ext2 文件系统中所支持的 block 大小有 1K、2K及 4K 三种。在格式化时 block 的大小就固定了，且每个 block 都有编号，以方便 inode的记录。不过要注意的是，由于 block 大小的差异，会导致该文件系统能够支持的最大磁盘容量与最大单一文件大小并不相同</p>
+<table>
+<thead>
+<tr>
+<th>Block 大小</th>
+<th>1KB</th>
+<th>2KB</th>
+<th>4KB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>最大单一文件限制</td>
+<td>16GB</td>
+<td>256GB</td>
+<td>2TB</td>
+</tr>
+<tr>
+<td>最大文件系统总容量</td>
+<td>2TB</td>
+<td>8TB</td>
+<td>16TB</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>需要注意的是，虽然 Ext2 已经能够支持大于 2GB 以上的单一文件大小，不过某些应用程序依然使用旧的限制，也就是说，某些程序只能够识别到小于 2GB 以下的文件而已，这就跟文件系统无关了</p>
+</blockquote>
+<ul>
+<li>Ext2 文件系统的 block 限制<ul>
+<li>原则上，block 的大小与数量在格式化完就不能够再改变了（除非重新格式化）</li>
+<li>每个 block 内最多只能够放置一个文件的数据<ul>
+<li>如果文件大于 block 的大小，则一个文件会占用多个 block 数量</li>
+<li>若文件小于 block ，则该 block 的剩余容量就不能够再被使用了（磁盘空间会浪费）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>基于以上的限制，如果block过大（4k），但是文件都非常小，可能会产生一些容量的浪费；如果block过小， 文件过大，可能导致不良的读写性能。</p>
+<blockquote>
+<p><strong>假设你的Ext2文件系统使用 4K block ，而该文件系统中有 10000 个小文件，每个文件大小均为 50Bytes，请问此时你的磁盘浪费多少容量？</strong></p>
+<p>由于 Ext2 文件系统中一个 block仅能容纳一个文件，因此每个 block 会浪费 <code>4096 - 50 = 4046 （Byte）</code>，系统中总共有一万个小文件，所有文件大小为：<code>50 （Bytes） x 10000 = 488.3KBytes</code>，但此时浪费的容量为：<code>4046 （Bytes） x 10000 = 38.6MBytes</code></p>
+<p>不到 1MB 的总文件大小却浪费将近 40MB 的容量，且文件越多将造成越多的磁盘容量浪费</p>
+</blockquote>
+<blockquote>
+<p>既然大的 block 可能会产生较严重的磁盘容量浪费，那么是否可以将 block 大小定为1K 即可？</p>
+<p>如果 block 较小的话，大型文件将会占用数量更多的 block ，而 inode 也要记录更多的 block 号码，此时将可能导致文件系统不良的读写性能</p>
+</blockquote>
+<h2 id="inode-table-（inode-表格）"><a href="#inode-table-（inode-表格）" class="headerlink" title="inode table （inode 表格）"></a>inode table （inode 表格）</h2><p>inode 的内容在记录文件的属性以及该文件实际数据是放置在哪几号 block 内</p>
+<p>基本上，inode 记录的文件数据至少有下面这些：</p>
+<ul>
+<li>文件类型：文件、目录、符号链接等</li>
+<li>文件权限：权限位（读、写、执行）以及文件的所有者和组的权限</li>
+<li>硬链接计数：指示有多少硬链接指向该 <code>inode</code></li>
+<li>文件所有者：文件的所有者的用户 ID</li>
+<li>文件组：文件所属的组的组ID</li>
+<li>文件大小；文件的字节数</li>
+<li>时间戳：创建时间(ctime)、修改时间(mtime)、访问时间(atime)</li>
+<li>数据块指针：指向文件数据块的指针或索引。这些指针存储了文件实际数据的位置</li>
+<li><strong>i-node number</strong>：在文件系统中 <code>inode</code> 的唯一标识符</li>
+</ul>
+<p>inode 的数量与大小也是在<strong>格式化时就已经固定</strong>了，除此之外 inode 还有以下特色：</p>
+<ul>
+<li>每个 inode 大小均固定为 128 Bytes （新的 ext4 与 xfs 可设置到 256 Bytes）</li>
+<li>每个文件都仅会占用一个 inode 而已<ul>
+<li>文件系统能够创建的文件数量与 inode 的数量有关</li>
+<li>系统读取文件时需要先找到 inode，并分析 inode 所记录的权限与使用者是否符合，若符合才开始读取 block 的内容</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p> inode 要记录的数据非常多，却只有 128Bytes 而已，而 inode 记录一个 block 号码要花掉 4Byte ，假设我一个文件有 400MB 且每个 block 为 4K 时，那么至少也要十万个 block 号码来记录，inode 哪有这么多空间来记录这些信息？</p>
+<p>为此系统将 inode 记录 block 号码的区域定义为12个直接，一个间接, 一个二级间接与一个三级间接记录区</p>
+</blockquote>
+<p>文件数据块的指针。<code>i_block</code> 数组的前 12 个条目是直接块指针，指向文件数据的实际位置。接下来的 3 个条目分别是一级间接、二级间接和三级间接块指针。这些间接块指针用于支持较大的文件。</p>
+<ul>
+<li><strong>直接块指针</strong>：指向文件数据的直接位置</li>
+<li><strong>一级间接块指针</strong>：指向一个块，其中包含更多的直接块指针</li>
+<li><strong>二级间接块指针</strong>：指向一个块，其中包含一级间接块的指针</li>
+<li><strong>三级间接块指针</strong>：指向一个块，其中包含二级间接块的指针</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ext2文件系统中的 inode 结构</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ext2_inode</span> &#123;</span></span><br><span class="line">    __le16 i_mode;           <span class="comment">// 文件类型和权限</span></span><br><span class="line">    __le16 i_uid;            <span class="comment">// 用户 ID</span></span><br><span class="line">    __le32 i_size;           <span class="comment">// 文件大小（字节数）</span></span><br><span class="line">    __le32 i_atime;          <span class="comment">// 访问时间（从 1970 年 1 月 1 日开始的秒数）</span></span><br><span class="line">    __le32 i_ctime;          <span class="comment">// 创建时间（从 1970 年 1 月 1 日开始的秒数）</span></span><br><span class="line">    __le32 i_mtime;          <span class="comment">// 修改时间（从 1970 年 1 月 1 日开始的秒数）</span></span><br><span class="line">    __le32 i_dtime;          <span class="comment">// 删除时间（从 1970 年 1 月 1 日开始的秒数）</span></span><br><span class="line">    __le16 i_gid;            <span class="comment">// 组 ID</span></span><br><span class="line">    __le16 i_links_count;    <span class="comment">// 硬链接计数</span></span><br><span class="line">    __le32 i_blocks;         <span class="comment">// 文件数据块数量（以 512 字节为单位）</span></span><br><span class="line">    __le32 i_flags;          <span class="comment">// 文件属性标志（如是否为只读文件）</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">            __le32 i_block[<span class="number">15</span>]; <span class="comment">// 数据块指针（包括直接、间接和双重间接指针）</span></span><br><span class="line">        &#125; linux2;</span><br><span class="line">    &#125; osd2;</span><br><span class="line">    __le32 i_reserved1;      <span class="comment">// 保留字段</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 假设有一个 ext2 文件系统中的 inode 结构如下</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ext2_inode</span> <span class="title">inode</span>;</span></span><br><span class="line">inode.i_mode = <span class="number">0100644</span>;   <span class="comment">// 常规文件，所有者读写，组和其他用户只读</span></span><br><span class="line">inode.i_uid = <span class="number">1000</span>;       <span class="comment">// 用户 ID</span></span><br><span class="line">inode.i_size = <span class="number">4096</span>;      <span class="comment">// 文件大小（字节数）</span></span><br><span class="line">inode.i_atime = <span class="number">1616161616</span>; <span class="comment">// 访问时间（时间戳）</span></span><br><span class="line">inode.i_ctime = <span class="number">1616161616</span>; <span class="comment">// 创建时间（时间戳）</span></span><br><span class="line">inode.i_mtime = <span class="number">1616161616</span>; <span class="comment">// 修改时间（时间戳）</span></span><br><span class="line">inode.i_dtime = <span class="number">0</span>;        <span class="comment">// 删除时间（如果文件未删除，则为 0）</span></span><br><span class="line">inode.i_gid = <span class="number">1000</span>;       <span class="comment">// 组 ID</span></span><br><span class="line">inode.i_links_count = <span class="number">1</span>;  <span class="comment">// 硬链接计数</span></span><br><span class="line">inode.i_blocks = <span class="number">8</span>;       <span class="comment">// 占用的块数</span></span><br><span class="line">inode.i_flags = <span class="number">0</span>;        <span class="comment">// 文件属性标志</span></span><br><span class="line"><span class="comment">// 假设数据块大小为 512 字节</span></span><br><span class="line"><span class="comment">// 直接块指针</span></span><br><span class="line">inode.i_block[<span class="number">0</span>] = <span class="number">1234</span>;  <span class="comment">// 数据块指针</span></span><br><span class="line">inode.i_block[<span class="number">1</span>] = <span class="number">1235</span>;  <span class="comment">// 数据块指针</span></span><br><span class="line"><span class="comment">// 一级间接块指针</span></span><br><span class="line">inode.i_block[<span class="number">12</span>] = <span class="number">1236</span>; <span class="comment">// 指向包含更多数据块指针的块</span></span><br><span class="line"><span class="comment">// 二级间接块指针</span></span><br><span class="line">inode.i_block[<span class="number">13</span>] = <span class="number">1237</span>; <span class="comment">// 指向包含一级间接块指针的块</span></span><br><span class="line"><span class="comment">// 三级间接块指针</span></span><br><span class="line">inode.i_block[<span class="number">14</span>] = <span class="number">1238</span>; <span class="comment">// 指向包含二级间接块指针的块</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这样子 inode 能够指定多少个 block 呢？</p>
+<p>以较小的 1K block 来说明好了，可以指定的情况如下：</p>
+<p>12 个直接指向： 12 * 1K&#x3D;12K，由于是直接指向，所以总共可记录 12 笔记录</p>
+<p>间接： 256 * 1K&#x3D;256K，每笔 block 号码的记录会花去 4Bytes， 1K 的大小能够记录256 笔记录</p>
+<p>双间接： 256 * 256 * 1K&#x3D;256 <sup>2</sup> K ，一层 block 会指定 256 个第二层，每个第二层可以指定256 个号码</p>
+<p>三间接： 256 * 256 * 256 * 1K&#x3D;256<sup>3</sup> K，第一层 block 会指定 256 个第二层，每个第二层可以指定 256 个第三层，每个第三层可以指定 256 个号码</p>
+<p>总额： 12 + 256 + 256<sup>2</sup> + 256<sup>3</sup>（K） &#x3D; 16GB </p>
+<p>当文件系统将 block 格式化为 1K 大小时，能够容纳的最大文件为 16GB， 跟前面表格[跳转](#Data Block（数据区块）)结果差不多。但这个方法不能用在 2K 及 4K block 大小的计算中，因为大于 2K 的 block 将会受到 Ext2 文件系统本身的限制，所以计算的结果会不太符合。</p>
+</blockquote>
+<h2 id="Superblock（超级区块）"><a href="#Superblock（超级区块）" class="headerlink" title="Superblock（超级区块）"></a>Superblock（超级区块）</h2><p>Superblock 是记录整个 <code>filesystem</code> 相关信息的地方，没有 Superblock ，就没有这个filesystem 了</p>
+<p>记录的信息主要有：</p>
+<ul>
+<li><p>block 与 inode 的总量</p>
+</li>
+<li><p>未使用与已使用的 inode &#x2F; block 数量</p>
+</li>
+<li><p>block 与 inode 的大小（block 为 1, 2, 4K，inode 为 128Bytes 或 256Bytes）</p>
+</li>
+<li><p>filesystem 的挂载时间、最近一次写入数据的时间、最近一次检验磁盘（fsck）的时间等文件系统的相关信息</p>
+</li>
+<li><p>一个 <code>valid bit</code> 数值，若此文件系统已被挂载，则 valid bit 为 0 ，若未被挂载，则 valid bit为 1 。</p>
+</li>
+</ul>
+<p>Superblock 非常重要，因为文件系统的基本信息都写在这里，superblock 的大小一般为 1024Bytes（<code>dumpe2fs</code>指令），此外，每个 <code>block group</code> 都可能含有 superblock ！事实上除了第一个 <code>block group</code> 含有 superblock，后续的 block group 不一定含有 superblock ，而若含有 superblock 则该 superblock主要是做为第一个 block group 内 superblock 的<strong>备份</strong>，这样做是为了 <code>superblock</code> 的救援。</p>
+<h2 id="Filesystem-Description-（文件系统描述说明）"><a href="#Filesystem-Description-（文件系统描述说明）" class="headerlink" title="Filesystem Description （文件系统描述说明）"></a>Filesystem Description （文件系统描述说明）</h2><p>这个区段可以描述每个 <code>block group</code> 的开始与结束的 block 号码，以及说明每个区段（superblock, bitmap, inodemap, data block）分别介于哪一个 block 号码之间。<code>dumpe2fs指令观察</code></p>
+<h2 id="block-bitmap-（区块对照表）"><a href="#block-bitmap-（区块对照表）" class="headerlink" title="block bitmap （区块对照表）"></a>block bitmap （区块对照表）</h2><p>从 block bitmap 当中可以知道哪些 block 是空的，系统就能够快速的找到可使用的空间来处置文件。同样的，如果删除某些文件时，那么那些文件原本占用的 block 号码就要释放，此时在 block bitmap 当中对应到该 block 号码的标志就要修改为<code>未使用中</code>，这就是bitmap 的功能。</p>
+<h2 id="inode-bitmap-（inode-对照表）"><a href="#inode-bitmap-（inode-对照表）" class="headerlink" title="inode bitmap （inode 对照表）"></a>inode bitmap （inode 对照表）</h2><p>这个与 block bitmap 是类似的功能，只是 block bitmap 记录的是使用与未使用的 block号码，而 inode bitmap 是记录使用与未使用的 inode 号码</p>
+<blockquote>
+<p>  dumpe2fs：查询 Ext 家族 superblock 信息的指令</p>
+<p>blkid：显示目前系统有被格式化的设备</p>
+</blockquote>
+<h2 id="文件系统与目录树的关系"><a href="#文件系统与目录树的关系" class="headerlink" title="文件系统与目录树的关系"></a>文件系统与目录树的关系</h2><p>在 Linux 系统下，每个文件（不管是一般文件还是目录文件）都会占用一个 <code>inode</code> ，且可依据文件内容的大小来分配多个 <code>block</code> 给该文件使用。</p>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><p>在 Linux 下的文件系统创建一个目录时，文件系统会分配一个 inode 与至少一块 block给该目录。其中，inode 记录该目录的相关权限与属性，并记录分配到的那块 block 号码；而 block 则记录在这个目录下的文件名与该文件名占用的 inode 号码数据。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看文件的inode</span></span><br><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ <span class="built_in">ls</span> -i -al</span><br><span class="line">总用量 52</span><br><span class="line"> 33566006 drwx------   5 <span class="built_in">test</span> <span class="built_in">test</span>     183 8月  10 14:56 .</span><br><span class="line">      138 drwxr-xr-x.  4 root root      29 7月  31 10:16 ..</span><br><span class="line"> 35194599 -rw-------   1 <span class="built_in">test</span> docker 16454 8月  14 10:49 .bash_history</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># block的大小都是 1024 的倍数，因为每个 block 的数量都是 1K, 2K, 4K</span></span><br><span class="line">[<span class="built_in">test</span>@172-12-0-1 ~]$ ll -d / /boot /usr/sbin /proc /sys</span><br><span class="line">dr-xr-xr-x.  24 root root  4096 7月  30 17:11 /</span><br><span class="line">dr-xr-xr-x.   6 root root  4096 7月  18 19:54 /boot</span><br><span class="line">dr-xr-xr-x  236 root root     0 8月   2 16:03 /proc  <span class="comment">#  /proc不占磁盘容量</span></span><br><span class="line">dr-xr-xr-x   13 root root     0 8月   2 16:03 /sys</span><br><span class="line">dr-xr-xr-x.   2 root root 12288 8月   2 15:25 /usr/sbin</span><br></pre></td></tr></table></figure>
+
+<p>由上面的结果可以发现目录并不是只占用一个 block 而已，在目录下面的文件数如果太多而导致一个 block 无法容纳下所有的文件名与 inode 对照表时，Linux 会给予该目录多一个 block 来继续记录相关的数据。</p>
+<blockquote>
+<p>在 Linux 下的 ext2 创建一个一般文件时， ext2 会分配一个 inode 与相对于该文件大小的 block 数量给该文件。例如：假设我的一个 block 为 4 KBytes ，我要创建一个 100KBytes 的文件，系统将分配一个 inode 与 25 个 block 来储存该文件，但 inode 仅有 12 个直接指向，因此还要多一个 block 来作为区块号码的记录。</p>
+</blockquote>
+<h3 id="目录树读取"><a href="#目录树读取" class="headerlink" title="目录树读取"></a>目录树读取</h3><p>inode 本身并不记录文件名，文件名的记录是在<strong>目录的 block</strong> 当中（前面提到**<code>新增/删除/更改文件名</code>与目录的 <code>w</code> 权限有关**），因此要读取某个文件时，就务必会经过目录的 inode 与 block ，然后才能够找到那个待读取文件的 inode 号码，最终才会读到正确的文件的 block 内的数据。</p>
+<p>由于目录树是由根目录开始读起，因此系统通过挂载的信息可以找到挂载点的 inode 号码，此时就能够得到根目录的 inode 内容，并依据该 inode 读取根目录的 block 内的文件名数据，再一层一层的往下读到正确的文件名。</p>
+<h2 id="EXT2-EXT3-EXT4-文件的存取与日志式文件系统的功能"><a href="#EXT2-EXT3-EXT4-文件的存取与日志式文件系统的功能" class="headerlink" title="EXT2&#x2F;EXT3&#x2F;EXT4 文件的存取与日志式文件系统的功能"></a>EXT2&#x2F;EXT3&#x2F;EXT4 文件的存取与日志式文件系统的功能</h2><p>新建一个文件或目录时，就需要 block bitmap 及 inode bitmap 的帮忙了</p>
+<p>假设我们想要新增一个文件，此时文件系统的行为是：</p>
+<ol>
+<li>先确定使用者对于新增文件的目录是否具有 <code>w 与 x</code> 的权限，若有的话才能新增</li>
+<li>根据 inode bitmap 找到没有使用的 inode 号码，并将新文件的权限&#x2F;属性写入</li>
+<li>根据 block bitmap 找到没有使用中的 block 号码，并将实际的数据写入 block 中，且更新 inode 的 block 指向数据</li>
+<li>将刚刚写入的 inode 与 block 数据同步更新 inode bitmap 与 block bitmap，并更新superblock 的内容</li>
+</ol>
+<p>一般来说，我们将 inode table 与 data block 称为<strong>数据存放区域</strong>，至于其他例如 superblock、block bitmap 与 inode bitmap 等区段被称为 <strong><code>metadata</code></strong> （中介数据），因为 superblock,inode bitmap 及 block bitmap 的数据是经常变动的，每次新增、移除、编辑时都可能会影响到这三个部分的数据，因此才被称为中介数据。</p>
+<h3 id="数据的不一致（Inconsistent）状态"><a href="#数据的不一致（Inconsistent）状态" class="headerlink" title="数据的不一致（Inconsistent）状态"></a>数据的不一致（Inconsistent）状态</h3><p>一般情况下，上述的新增动作当然可以顺利的完成。但是如果你的文件在写入文件系统时，因为不知名原因导致<strong>系统中断</strong>（例如突然的停电啊、系统核心发生错误等发生时），导致写入的数据仅有 inode table 及 data block 而已，最后一个同步更新中介数据的步骤并没有做完，此时就会发生 metadata 的内容与实际数据存放区产生<strong>不一致</strong>（Inconsistent）的情况了。</p>
+<p>在早期的 Ext2 文件系统中，如果发生这个问题，那么系统在重新开机的时候，就会借由 Superblock 当中记录的 valid bit （是否有挂载）与 filesystemstate （clean 与否）等状态来判断是否强制进行数据一致性的检查（<code>e2fsck</code>指令）</p>
+<p>不过，这个检查要针对 metadata 区域与实际数据存放区来进行比对，得要搜索整个 filesystem，这样的检查真的很费时，这也就造成后来所谓日志式文件系统的兴起了。</p>
+<h3 id="日志式文件系统（Journaling-filesystem）"><a href="#日志式文件系统（Journaling-filesystem）" class="headerlink" title="日志式文件系统（Journaling filesystem）"></a>日志式文件系统（Journaling filesystem）</h3><p>为了避免上述提到的文件系统不一致的情况发生，前辈们想到一个方式：如果在我们的 filesystem 当中规划出一个区块，该区块专门记录写入或修订文件时的步骤，就可以简化一致性检查的步骤了，也就是说：</p>
+<ol>
+<li>预备：当系统要写入一个文件时，会先在日志记录区块中记录某个文件准备要写入的信息</li>
+<li>实际写入：开始写入文件的权限与数据，开始更新 metadata 的数据</li>
+<li>结束：完成数据与 metadata 的更新后，在日志记录区块当中完成该文件的纪录</li>
+</ol>
+<p>在这样的程序中，万一数据的纪录过程当中发生了问题，我们的系统只要去检查日志记录区块，就可以知道哪个文件发生了问题，针对该问题来做一致性的检查即可，而不必针对整块 filesystem 去检查，这样就可以做到快速修复 filesystem。</p>
+<h2 id="Linux-文件系统的运行"><a href="#Linux-文件系统的运行" class="headerlink" title="Linux 文件系统的运行"></a>Linux 文件系统的运行</h2><p>知道了目录树与文件系统的关系以及所有的数据要载入到内存后 CPU 才能对该数据进行处理。如果你频繁编辑一个大文件，在编辑的过程中又频繁的要系统来写入到磁盘中，由于磁盘写入的速度要比内存慢很多，时间都耗在等待磁盘的写入&#x2F;读取上。</p>
+<p>为了解决这个问题，Linux 通过一个称为<strong>非同步处理（asynchronously）</strong>的方式：当系统载入一个文件到内存后，如果该文件没有被改动过，则在内存区段的文件数据会被标记为干净（<strong>clean</strong>）的。但如果内存中的文件数据被更改过了，此时该内存中的数据会被标记为脏的（<strong>Dirty</strong>）。此时所有的动作都还在<strong>内存</strong>中执行，并没有写入到磁盘中，系统会不定时的将内存中设置为<code>Dirty</code>的数据写回磁盘，以保持磁盘与内存数据的一致性。也可以使用 <code>sync</code>指令来手动写入磁盘。</p>
+<p>内存的速度要比磁盘快的多，如果能够将常用的文件放置到内存当中，就能增加系统性能。</p>
+<p>因此 Linux 系统上面文件系统与内存有非常大的关系：</p>
+<ul>
+<li>系统会将常用的文件数据放置到<strong>内存的缓冲区</strong>，以加速文件系统的读&#x2F;写</li>
+<li>可以手动使用 sync 来强迫内存中设置为 Dirty 的文件回写到磁盘中</li>
+<li>若正常关机时，关机指令会主动调用 sync 来将内存的数据回写入磁盘内</li>
+<li>但若不正常关机（如跳电、死机或其他不明原因），由于数据尚未回写到磁盘内，因此重新开机后可能会花很多时间在进行磁盘检验，甚至可能导致文件系统的损毁（非磁盘损毁）</li>
+</ul>
+<h2 id="挂载点的意义（mount-point）"><a href="#挂载点的意义（mount-point）" class="headerlink" title="挂载点的意义（mount point）"></a>挂载点的意义（mount point）</h2><p>每个 <code>filesystem</code> 都有独立的 inode &#x2F; block &#x2F; superblock 等信息，这个文件系统要能够链接到目录树才能被使用。<strong>将文件系统与目录树结合的动作</strong>称为挂载。<strong>挂载点一定是目录</strong>，该目录为进入该文件系统的入口。因此并不是任何文件系统都能使用，必须要<strong>挂载</strong>到目录树的某个目录后，才能够使用该文件系统</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 ~]# <span class="built_in">ls</span> -lid / /boot /home</span><br><span class="line">128 dr-xr-xr-x. 24 root root 4096 7月  30 17:11 /</span><br><span class="line">128 dr-xr-xr-x.  6 root root 4096 7月  18 19:54 /boot</span><br><span class="line">138 drwxr-xr-x.  4 root root   29 7月  31 10:16 /home</span><br></pre></td></tr></table></figure>
+
+<p>由于 XFS filesystem 最顶层目录的 inode 一般为 128 号，可以发现 &#x2F;、&#x2F;boot、&#x2F;home 为三个不同的 filesystem（每一行的文件属性并不相同，且三个目录的挂载点也均不相同）</p>
+<p>从使用文件系统的观点来看，同一个 filesystem 的某个 inode 只会对应到一个文件内容而已（一个文件占用一个 inode ），因此可以通过判断 inode 号码来确认不同文件名是否为相同的文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 /]# <span class="built_in">ls</span> -ild /  /.  /..</span><br><span class="line">128 dr-xr-xr-x. 24 root root 4096 7月  30 17:11 /</span><br><span class="line">128 dr-xr-xr-x. 24 root root 4096 7月  30 17:11 /.</span><br><span class="line">128 dr-xr-xr-x. 24 root root 4096 7月  30 17:11 /..</span><br></pre></td></tr></table></figure>
+
+<p>上面的信息中由于挂载点均为 &#x2F; ，因此三个文件均在同一个 filesystem 内，而这三个文件的 inode 号码均为 128 号，因此这三个文件名都指向同一个 inode 号码，所以这三个文件是完全一样的。</p>
+<h2 id="其他-Linux-支持的文件系统与-VFS"><a href="#其他-Linux-支持的文件系统与-VFS" class="headerlink" title="其他 Linux 支持的文件系统与 VFS"></a>其他 Linux 支持的文件系统与 VFS</h2><p>常见的支持文件系统有：</p>
+<ul>
+<li><p>传统文件系统：ext2 &#x2F; minix &#x2F; MS-DOS &#x2F; FAT（用 vfat 模块）&#x2F; iso9660 （光盘）等</p>
+</li>
+<li><p>日志式文件系统： ext3 &#x2F;ext4 &#x2F; ReiserFS &#x2F; Windows’ NTFS &#x2F; IBM’s JFS &#x2F; SGI’s XFS &#x2F;ZFS</p>
+</li>
+<li><p>网络文件系统： NFS &#x2F; SMBFS</p>
+</li>
+<li><p>查看你的 Linux 支持的文件系统有哪些</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 /]# <span class="built_in">ls</span> -l /lib/modules/$(<span class="built_in">uname</span> -r)/kernel/fs</span><br><span class="line">总用量 20</span><br><span class="line">-rw-r--r--. 1 root root 7792 12月 22 2021 binfmt_misc.ko.xz</span><br><span class="line">drwxr-xr-x. 2 root root   30 7月  18 19:35 cachefiles</span><br><span class="line">drwxr-xr-x. 2 root root   24 7月  18 19:35 ceph</span><br><span class="line">drwxr-xr-x. 2 root root   24 7月  18 19:35 cifs</span><br><span class="line">drwxr-xr-x. 2 root root   26 7月  18 19:35 cramfs</span><br><span class="line">drwxr-xr-x. 2 root root   23 7月  18 19:35 dlm</span><br><span class="line">drwxr-xr-x. 2 root root   24 7月  18 19:35 ext4</span><br><span class="line">drwxr-xr-x. 2 root root   60 7月  18 19:35 fat</span><br><span class="line">drwxr-xr-x. 2 root root   27 7月  18 19:35 fscache</span><br><span class="line">drwxr-xr-x. 2 root root   46 7月  18 19:35 fuse</span><br><span class="line">drwxr-xr-x. 2 root root   24 7月  18 19:35 gfs2</span><br><span class="line">drwxr-xr-x. 2 root root   25 7月  18 19:35 isofs</span><br><span class="line">drwxr-xr-x. 2 root root   24 7月  18 19:35 jbd2</span><br><span class="line">drwxr-xr-x. 2 root root   25 7月  18 19:35 lockd</span><br><span class="line">-rw-r--r--. 1 root root 4900 12月 22 2021 mbcache.ko.xz</span><br><span class="line">drwxr-xr-x. 5 root root  120 7月  18 19:35 nfs</span><br><span class="line">drwxr-xr-x. 2 root root   46 7月  18 19:35 nfs_common</span><br><span class="line">drwxr-xr-x. 2 root root   24 7月  18 19:35 nfsd</span><br><span class="line">drwxr-xr-x. 2 root root 4096 7月  18 19:35 nls</span><br><span class="line">drwxr-xr-x. 2 root root   27 7月  18 19:35 overlayfs</span><br><span class="line">drwxr-xr-x. 2 root root   27 7月  18 19:35 pstore</span><br><span class="line">drwxr-xr-x. 2 root root   28 7月  18 19:35 squashfs</span><br><span class="line">drwxr-xr-x. 2 root root   23 7月  18 19:35 udf</span><br><span class="line">drwxr-xr-x. 2 root root   23 7月  18 19:35 xfs</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>系统目前已载入到内存中支持的文件系统</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 /]# <span class="built_in">cat</span> /proc/filesystems</span><br><span class="line">nodev	sysfs</span><br><span class="line">nodev	tmpfs</span><br><span class="line">nodev	bdev</span><br><span class="line">nodev	proc</span><br><span class="line">nodev	cgroup</span><br><span class="line">nodev	cgroup2</span><br><span class="line">nodev	cpuset</span><br><span class="line">nodev	devtmpfs</span><br><span class="line">nodev	configfs</span><br><span class="line">nodev	debugfs</span><br><span class="line">nodev	tracefs</span><br><span class="line">nodev	securityfs</span><br><span class="line">nodev	sockfs</span><br><span class="line">nodev	bpf</span><br><span class="line">nodev	pipefs</span><br><span class="line">nodev	ramfs</span><br><span class="line">nodev	hugetlbfs</span><br><span class="line">nodev	devpts</span><br><span class="line">nodev	autofs</span><br><span class="line">nodev	pstore</span><br><span class="line">nodev	mqueue</span><br><span class="line">	fuseblk</span><br><span class="line">nodev	fuse</span><br><span class="line">nodev	fusectl</span><br><span class="line">	xfs</span><br><span class="line">nodev	overlay</span><br></pre></td></tr></table></figure>
+
+<h3 id="Linux-VFS-（Virtual-Filesystem-Switch）"><a href="#Linux-VFS-（Virtual-Filesystem-Switch）" class="headerlink" title="Linux VFS （Virtual Filesystem Switch）"></a>Linux VFS （Virtual Filesystem Switch）</h3><p><strong>Linux 的核心是如何管理这些文件系统呢？</strong></p>
+<p>整个 Linux 的 filesystem 都是 VFS 在进行管理，使用者并不需要知道每个 partition 上头的 filesystem 是什么，VFS 会主动做好读取的动作</p>
+<blockquote>
+<p> 假设你的 &#x2F; 使用的是 &#x2F;dev&#x2F;hda1 ，用 ext3 ，而 &#x2F;home 使用 &#x2F;dev&#x2F;hda2 ，用 reiserfs ，那么你取用 &#x2F;home&#x2F;dmtsai&#x2F;.bashrc 时，不需要指定要用的什么文件系统的模块来读取！这个就是 VFS 的功能！</p>
+</blockquote>
+<p>通过这个 VFS 的功能来管理所有的 filesystem，省去我们需要自行设置读取文件系统的定义。</p>
+<h3 id="XFS-文件系统简介"><a href="#XFS-文件系统简介" class="headerlink" title="XFS 文件系统简介"></a>XFS 文件系统简介</h3><p>CentOS 7 开始，默认的文件系统已经由原本的 EXT4 变成了 XFS 文件系统了，这是因为</p>
+<ul>
+<li>EXT 家族当前较伤脑筋的地方：支持度最广，但格式化超慢</li>
+</ul>
+<p>Ext 文件系统对于文件格式化的处理方面，采用的是<strong>预先规划</strong>出所有的 inode&#x2F;block&#x2F;metadata 等数据，未来系统可以直接取用，不需要再进行动态配置的作法。这个作法在早期磁盘容量还不大的时候没啥问题，但时至今日，磁盘容量越来越大，连传统的 MBR 都已经被 GPT 所取代，现在都已经说到 PB 或 EB 以上容量了！当你的 TB 以上等级的传统 ext 家族文件系统在格式化的时候，光是系统要预先分配 inode 与 block 就要消耗好多时间。</p>
+<blockquote>
+<p>由于虚拟化的应用越来越广泛，而作为虚拟化磁盘来源的巨型文件（单一文件好几个GB 以上）也就越来越常见了。这种巨型文件在处理上需要考虑到性能问题，否则虚拟磁盘的效率就会不太好看。因此，从 CentOS 7.x 开始，文件系统已经由默认的 Ext4 变成了xfs 这一个较适合大容量磁盘与巨型文件性能较佳的文件系统了</p>
+</blockquote>
+<h4 id="XFS-文件系统的配置"><a href="#XFS-文件系统的配置" class="headerlink" title="XFS 文件系统的配置"></a>XFS 文件系统的配置</h4><p>xfs 是一个<strong>日志式文件系统</strong>，而 CentOS 7.x 拿它当默认的文件系统，最早之前，这个 xfs 就是<strong>用于大容量磁盘以及高性能文件系统</strong>，相当适合现在的系统环境。此外，几乎所有 Ext4 文件系统有的功能， xfs 都可以具备！</p>
+<p>xfs 文件系统在数据的分布上，主要规划为三个部份，一个数据区（data section）、一个文件系统活动登录区（log section）以及一个实时运行区（realtime section）。这三个区域的数据内容如下：</p>
+<ul>
+<li><p>数据区（data section）</p>
+<p>基本上，数据区就跟ext 家族一样，包括 <code>inode/data block/superblock</code> 等数据，都放置在这个区块。这个数据区与 ext 家族的 block group 类似，也是分为多个储存区群组（allocation groups）来分别放置文件系统所需要的数据。</p>
+<p>每个储存区群组都包含了</p>
+<ul>
+<li>整个文件系统的 superblock</li>
+<li>剩余空间的管理机制</li>
+<li>inode的分配与追踪</li>
+</ul>
+<p>此外，<strong>inode与 block</strong> 都是系统需要<strong>用到时才动态配置产生</strong>，所以格式化动作快。</p>
+<p>与 ext 家族不同的是， xfs 的 block 与 inode 有<strong>多种不同的容量可供设置</strong>，block 容量可在 512Bytes ~ 64K 之间调整，不过，Linux 由于<strong>内存管理和分页机制</strong>的关系（<em>Linux 系统使用分页机制来管理内存，物理内存被分成固定大小的页（pages），页大小通常为 4 KB（即 4096 字节）</em>），大多数 block 设置为 4K， <strong>与页大小对齐</strong>，以提高性能和效率。</p>
+<blockquote>
+<p>设置块大小</p>
+<p>mkfs.xfs -b size&#x3D;4096 &#x2F;dev&#x2F;sdX</p>
+</blockquote>
+<p>至于 inode 容量可设置 256Bytes 到 2M。一般保留 256Bytes 的默认值就够用了</p>
+<blockquote>
+<p>设置inode大小</p>
+<p>mkfs.xfs -i size&#x3D;256 &#x2F;dev&#x2F;sdX</p>
+</blockquote>
+</li>
+<li><p>文件系统活动登录区（log section）</p>
+<p>这个区域主要被用来<strong>记录文件系统的变化</strong>，直到该变化完整的写入到数据区后，才会被终结。</p>
+<p>如果文件系统因为某些缘故（例如最常见的停电）而损毁时，系统会拿这个登录区块来进行检验，看看系统挂掉之前，文件系统正在运行哪些动作，快速的修复文件系统。</p>
+<p>在这个区域中，磁盘活动是相当频繁的，你可以指定外部的SSD 磁盘来作为 xfs 文件系统的日志区块，这样当系统需要进行任何活动时，就可以更快速的进行工作。</p>
+</li>
+<li><p>实时运行区（realtime section）</p>
+<p>当有文件要被创建时，xfs 会在这个区段里面找一个到数个 extent 区块，将文件放置在这个区块内，等到分配完毕后，再写入到数据区的 inode 与 block 去。</p>
+<p>这个 <strong><code>extent</code></strong> 区块的大小 (4K - 1G)要在格式化的时候就先指定。一般磁盘默认为 64K 容量，最好不要乱动，因为可能会影响到实体磁盘的性能。</p>
+</li>
+<li><p>XFS 文件系统的描述数据观察</p>
+<p>可以使用 <code>xfs_info</code> 指令观察</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 找出 /boot 这个挂载点下面的文件系统的 superblock 纪录</span></span><br><span class="line">[root@172-12-0-1 ~]# <span class="built_in">df</span> -T /boot</span><br><span class="line">文件系统       类型   1K-块   已用   可用 已用% 挂载点</span><br><span class="line">/dev/nvme0n1p1 xfs  1038336 214876 823460   21% /boot</span><br><span class="line"><span class="comment"># 可以看出是xfs文件系统</span></span><br><span class="line">[root@172-12-0-1 ~]# xfs_info /dev/nvme0n1p1</span><br><span class="line"><span class="comment"># isize 是inode 的容量，agcount 是储存区群组（allocation group）的个数，agsize 是每个储存区群组具有 65536 个 block，配合第 12 行的 block 设置为 4K，因此整个文件系统的容量应该就是 65536 * 4 * 4 = 1048576k = 1G 这么大</span></span><br><span class="line">meta-data=/dev/nvme0n1p1         isize=512    agcount=4, agsize=65536 blks</span><br><span class="line"><span class="comment"># sectsz 是逻辑扇区</span></span><br><span class="line">         =                       sectsz=512   attr=2, projid32bit=1</span><br><span class="line">         =                       crc=1        finobt=1, sparse=1, rmapbt=0</span><br><span class="line">         =                       reflink=1</span><br><span class="line"><span class="comment"># bsize 是block 的容量，整个文件系统有262144个block</span></span><br><span class="line">data     =                       bsize=4096   blocks=262144, imaxpct=25</span><br><span class="line"><span class="comment"># sunit和swidth 与磁盘阵列的 stripe 相关性较高，这里没有使用磁盘阵列</span></span><br><span class="line">         =                       sunit=0      swidth=0 blks</span><br><span class="line">naming   =version 2              bsize=4096   ascii-ci=0, ftype=1</span><br><span class="line"><span class="comment"># internal 表示登录区位置在文件系统内， 2560 * 4K = 10M容量</span></span><br><span class="line"><span class="built_in">log</span>      =internal <span class="built_in">log</span>           bsize=4096   blocks=2560, version=2</span><br><span class="line">         =                       sectsz=512   sunit=0 blks, lazy-count=1</span><br><span class="line"><span class="comment"># 实时运行区， extent 容量为 4K，不过目前并没有使用</span></span><br><span class="line">realtime =none                   extsz=4096   blocks=0, rtextents=0</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="文件系统的简单操作"><a href="#文件系统的简单操作" class="headerlink" title="文件系统的简单操作"></a>文件系统的简单操作</h2><h3 id="磁盘与目录的容量"><a href="#磁盘与目录的容量" class="headerlink" title="磁盘与目录的容量"></a>磁盘与目录的容量</h3><p>磁盘的整体数据在 superblock 区块中，但是每个文件的容量是在 inode当中记录的</p>
+<ul>
+<li>df：列出文件系统的整体磁盘使用量</li>
+<li>du：评估文件系统的磁盘使用量（常用在推估目录所占容量）</li>
+</ul>
+<h4 id="df"><a href="#df" class="headerlink" title="df"></a>df</h4><ul>
+<li>以易读的方式显示容量</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 ~]# <span class="built_in">df</span> -h</span><br><span class="line">文件系统             容量  已用  可用 已用% 挂载点</span><br><span class="line">devtmpfs             3.8G     0  3.8G    0% /dev</span><br><span class="line"><span class="comment"># /dev/shm 利用内存虚拟出来的磁盘空间，通常是总实体内存的一半，存取速度快，但是数据在关机后会丢失</span></span><br><span class="line">tmpfs                3.8G     0  3.8G    0% /dev/shm</span><br><span class="line">tmpfs                3.8G  9.1M  3.8G    1% /run</span><br><span class="line">tmpfs                3.8G     0  3.8G    0% /sys/fs/cgroup</span><br><span class="line">/dev/mapper/cl-root   35G   12G   24G   34% /</span><br><span class="line">/dev/nvme0n1p1      1014M  210M  805M   21% /boot</span><br><span class="line">tmpfs                775M     0  775M    0% /run/user/0</span><br><span class="line">overlay               35G   12G   24G   34% /var/lib/docker/overlay2/fbc51c4c7f4544effda9d2328bb3d841f0035c6678e211e968f18f31cf14ffb4/merged</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将 &#x2F;etc 下面的可用的磁盘容量以易读的容量格式显示</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 ~]# <span class="built_in">df</span> -h /etc</span><br><span class="line">文件系统             容量  已用  可用 已用% 挂载点</span><br><span class="line">/dev/mapper/cl-root   35G   12G   24G   34% /</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将目前各个 partition 当中可用的 inode 数量列出</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 ~]# <span class="built_in">df</span> -ih</span><br><span class="line">文件系统            Inode 已用(I) 可用(I) 已用(I)% 挂载点</span><br><span class="line">devtmpfs             964K     400    963K       1% /dev</span><br><span class="line">tmpfs                968K       1    968K       1% /dev/shm</span><br><span class="line">tmpfs                968K     736    968K       1% /run</span><br><span class="line">tmpfs                968K      17    968K       1% /sys/fs/cgroup</span><br><span class="line">/dev/mapper/cl-root   18M    143K     18M       1% /</span><br><span class="line">/dev/nvme0n1p1       512K     311    512K       1% /boot</span><br><span class="line">tmpfs                968K       6    968K       1% /run/user/0</span><br><span class="line">overlay               18M    143K     18M       1% /var/lib/docker/overlay2/fbc51c4c7f4544effda9d2328bb3d841f0035c6678e211e968f18f31cf14ffb4/merged</span><br></pre></td></tr></table></figure>
+
+<p>由于 <code>df</code> 读取的数据几乎都是针对整个文件系统，因此读取的范围主要是在 <code>Superblock</code> 内的信息，所以这个指令显示结果的速度非常的快速，在显示的结果中需要特别留意根目录的剩余容量，因为所有的数据都是由根目录衍生出来的。</p>
+<h4 id="du"><a href="#du" class="headerlink" title="du"></a>du</h4><ul>
+<li>检查根目录下面每个目录所占用的容量</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 ~]# <span class="built_in">du</span> -smh /*</span><br><span class="line">0	/bin</span><br><span class="line">171M	/boot</span><br><span class="line">0	/dev</span><br><span class="line">25M	/etc</span><br><span class="line">321M	/git</span><br><span class="line">1.5G	/home</span><br><span class="line">0	/lib</span><br><span class="line">0	/lib64</span><br><span class="line">0	/media</span><br><span class="line">92M	/minikube-linux-amd64</span><br><span class="line">0	/mnt</span><br><span class="line">100M	/myblog</span><br><span class="line">24M	/node_modules</span><br><span class="line">0	/opt</span><br><span class="line">20K	/package-lock.json</span><br><span class="line">4.0K	/patch</span><br><span class="line"><span class="comment"># 因为/proc 是内存内的程序，程序执行结束就会消失，因此会有些目录找不到</span></span><br><span class="line"><span class="built_in">du</span>: 无法访问<span class="string">&#x27;/proc/1370017/task/1370017/fd/4&#x27;</span>: 没有那个文件或目录</span><br><span class="line"><span class="built_in">du</span>: 无法访问<span class="string">&#x27;/proc/1370017/task/1370017/fdinfo/4&#x27;</span>: 没有那个文件或目录</span><br><span class="line"><span class="built_in">du</span>: 无法访问<span class="string">&#x27;/proc/1370017/fd/4&#x27;</span>: 没有那个文件或目录</span><br><span class="line"><span class="built_in">du</span>: 无法访问<span class="string">&#x27;/proc/1370017/fdinfo/4&#x27;</span>: 没有那个文件或目录</span><br><span class="line">0	/proc</span><br><span class="line">185M	/root</span><br><span class="line">9.1M	/run</span><br><span class="line">0	/sbin</span><br><span class="line">0	/srv</span><br><span class="line">0	/sys</span><br><span class="line">40K	/test</span><br><span class="line">0	/tmp</span><br><span class="line">2.7G	/usr</span><br><span class="line">6.0G	/var</span><br><span class="line">1.4G	/www</span><br></pre></td></tr></table></figure>
+
+<p>与 df 不一样的是，<code>du</code> 指令会直接到文件系统去搜索所有的文件数据，速度较慢。</p>
+<blockquote>
+<p>想要列出某目录下的全部数据，可以加上 -S 的选项，减少次目录的加总</p>
+</blockquote>
+<h2 id="实体链接与符号链接：-ln"><a href="#实体链接与符号链接：-ln" class="headerlink" title="实体链接与符号链接： ln"></a>实体链接与符号链接： ln</h2><p>在 Linux 下面的链接文件有两种:</p>
+<ol>
+<li>符号链接（Symbolic Link）：一个特殊类型的文件，它指向另一个<strong>文件或目录</strong>的路径。可以理解为Windows中的快捷方式<ul>
+<li>创建：<code>ln -s /path/to/original /path/to/symlink</code></li>
+<li>特点：<ul>
+<li>可以跨文件系统创建</li>
+<li>删除源文件后，符号链接会变成无效链接（悬空链接）</li>
+<li>使用<code>ls -l</code>查看符号链接时，显示形式为<code>lrwxrwxrwx</code>，并显示链接目标</li>
+<li>修改链接文件时，源文件也会变更</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>硬链接（hard link）：一个文件系统中的<strong>文件</strong>指针，指向相同的 inode 号，即指向实际的数据块。硬链接和原文件共享相同的 inode 和数据块（<code>类似Java中的对象引用</code>）<ul>
+<li>创建：<code>ln /path/to/original /path/to/hardlink</code></li>
+<li>特点;<ul>
+<li>不能跨文件系统创建</li>
+<li>删除原文件时，硬链接仍然有效，因为它们指向相同的 inode</li>
+<li>使用<code>ls -l</code>查看硬链接时，显示形式为<code>-rw-r--r--</code>，没有链接信息</li>
+<li>不能link目录</li>
+<li>修改链接文件其实就是在修改源文件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="磁盘的分区、格式化、检验与挂载"><a href="#磁盘的分区、格式化、检验与挂载" class="headerlink" title="磁盘的分区、格式化、检验与挂载"></a>磁盘的分区、格式化、检验与挂载</h2><p>我们想要在系统里面新增一颗磁盘时，有哪些动作需要做呢：</p>
+<ol>
+<li>对磁盘进行分区，以创建可用的 partition </li>
+<li>对分区进行格式化（format），以创建系统可用的 filesystem</li>
+<li>对刚刚创建好的 filesystem 进行检验（可选）</li>
+<li>在 Linux 系统上，需要创建挂载点（目录），并将它挂载上来</li>
+</ol>
+<h3 id="观察磁盘分区状态"><a href="#观察磁盘分区状态" class="headerlink" title="观察磁盘分区状态"></a>观察磁盘分区状态</h3><h4 id="lsblk-（list-block-device）列出系统上的所有磁盘列表"><a href="#lsblk-（list-block-device）列出系统上的所有磁盘列表" class="headerlink" title="lsblk （list block device）列出系统上的所有磁盘列表"></a>lsblk （list block device）列出系统上的所有磁盘列表</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 /]# lsblk</span><br><span class="line"><span class="comment">#NAME :设备文件名，会省略/dev等前导目录</span></span><br><span class="line"><span class="comment"># MAJ:MIN :主要：次要设备代码</span></span><br><span class="line"><span class="comment"># RM :是否为可卸载设备，如U盘</span></span><br><span class="line"><span class="comment"># RO :是否为只读设备</span></span><br><span class="line">NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</span><br><span class="line">sr0          11:0    1  789M  0 rom  </span><br><span class="line">nvme0n1     259:0    0   40G  0 disk </span><br><span class="line">├─nvme0n1p1 259:1    0    1G  0 part /boot</span><br><span class="line">└─nvme0n1p2 259:2    0   39G  0 part </span><br><span class="line">  ├─cl-root 253:0    0   35G  0 lvm  /</span><br><span class="line">  └─cl-swap 253:1    0    4G  0 lvm</span><br></pre></td></tr></table></figure>
+
+<h4 id="blkid-列出设备的-UUID-等参数"><a href="#blkid-列出设备的-UUID-等参数" class="headerlink" title="blkid 列出设备的 UUID 等参数"></a>blkid 列出设备的 UUID 等参数</h4><blockquote>
+<p>lsblk 也可以使用 -f 来列出文件系统与设备的 UUID 数据</p>
+</blockquote>
+<p>UUID 是全域单一识别码（universally unique identifier），Linux 会将系统内所有的设备都给予一个识别码，作为挂载或者使用这个设备&#x2F;文件系统</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 /]# blkid</span><br><span class="line">/dev/nvme0n1p1: UUID=<span class="string">&quot;1042e93c-e0b7-419f-9253-d38b759bce52&quot;</span> BLOCK_SIZE=<span class="string">&quot;512&quot;</span> TYPE=<span class="string">&quot;xfs&quot;</span> PARTUUID=<span class="string">&quot;ad2a4d81-01&quot;</span></span><br><span class="line">/dev/nvme0n1p2: UUID=<span class="string">&quot;SJB3Rh-mEln-qIDL-Z3Zt-Hr2M-0NGa-NxGZWd&quot;</span> TYPE=<span class="string">&quot;LVM2_member&quot;</span> PARTUUID=<span class="string">&quot;ad2a4d81-02&quot;</span></span><br><span class="line">/dev/sr0: BLOCK_SIZE=<span class="string">&quot;2048&quot;</span> UUID=<span class="string">&quot;2021-11-13-00-32-00-00&quot;</span> LABEL=<span class="string">&quot;CentOS-8-5-2111-x86_64-dvd&quot;</span> TYPE=<span class="string">&quot;iso9660&quot;</span> PTUUID=<span class="string">&quot;45f5f6ac&quot;</span> PTTYPE=<span class="string">&quot;dos&quot;</span></span><br><span class="line">/dev/mapper/cl-root: UUID=<span class="string">&quot;3d1bfc52-aa9d-459d-89fa-1142cc63fc9c&quot;</span> BLOCK_SIZE=<span class="string">&quot;512&quot;</span> TYPE=<span class="string">&quot;xfs&quot;</span></span><br><span class="line">/dev/mapper/cl-swap: UUID=<span class="string">&quot;46dd982b-9cf4-4626-8675-c9a8773c5962&quot;</span> TYPE=<span class="string">&quot;swap&quot;</span></span><br><span class="line">/dev/nvme0n1: PTUUID=<span class="string">&quot;ad2a4d81&quot;</span> PTTYPE=<span class="string">&quot;dos&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="parted-列出磁盘的分区表类型与分区信息"><a href="#parted-列出磁盘的分区表类型与分区信息" class="headerlink" title="parted 列出磁盘的分区表类型与分区信息"></a>parted 列出磁盘的分区表类型与分区信息</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 /]# parted /dev/mapper/cl-root <span class="built_in">print</span></span><br><span class="line">Model: Linux device-mapper (linear) (dm)	<span class="comment"># 磁盘的模块名称（厂商）</span></span><br><span class="line">Disk /dev/mapper/cl-root: 37.6GB	<span class="comment"># 磁盘总容量</span></span><br><span class="line">Sector size (logical/physical): 512B/512B	<span class="comment"># 磁盘的每个逻辑/物理扇区容量</span></span><br><span class="line">Partition Table: loop	<span class="comment"># 分区表的格式（MBR/GPT），这里是虚拟机的缘故</span></span><br><span class="line">Disk Flags: </span><br><span class="line"></span><br><span class="line">Number  Start  End     Size    File system  标志		<span class="comment"># 分区数据</span></span><br><span class="line"> 1      0.00B  37.6GB  37.6GB  xfs</span><br></pre></td></tr></table></figure>
+
+<h3 id="磁盘分区：-gdisk-fdisk"><a href="#磁盘分区：-gdisk-fdisk" class="headerlink" title="磁盘分区： gdisk&#x2F;fdisk"></a>磁盘分区： gdisk&#x2F;fdisk</h3><p>MBR 分区表请使用 fdisk 分区， GPT 分区表请使用 gdisk 分区</p>
+<h4 id="gdisk"><a href="#gdisk" class="headerlink" title="gdisk"></a>gdisk</h4><blockquote>
+<p> 具体分区操作可以直接按照界面提示来，</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 /]# gdisk /dev/vda  <span class="comment">#设备名称不要加上数字</span></span><br><span class="line">Command （? <span class="keyword">for</span> <span class="built_in">help</span>）: ?</span><br><span class="line">b       back up GPT data to a file</span><br><span class="line">c       change a partition<span class="string">&#x27;s name</span></span><br><span class="line"><span class="string">d       delete a partition           # 删除一个分区</span></span><br><span class="line"><span class="string">i       show detailed information on a partition</span></span><br><span class="line"><span class="string">l       list known partition types</span></span><br><span class="line"><span class="string">n       add a new partition          # 增加一个分区</span></span><br><span class="line"><span class="string">o       create a new empty GUID partition table （GPT）</span></span><br><span class="line"><span class="string">p       print the partition table    # 印出分区表（常用）</span></span><br><span class="line"><span class="string">q       quit without saving changes  # 不储存分区就直接离开 gdisk</span></span><br><span class="line"><span class="string">r       recovery and transformation options （experts only）</span></span><br><span class="line"><span class="string">s       sort partitions</span></span><br><span class="line"><span class="string">t       change a partition&#x27;</span>s <span class="built_in">type</span> code</span><br><span class="line">v       verify disk</span><br><span class="line">w       write table to disk and <span class="built_in">exit</span> <span class="comment"># 储存分区操作后离开 gdisk</span></span><br><span class="line">x       extra functionality （experts only）</span><br><span class="line">?       <span class="built_in">print</span> this menu</span><br><span class="line">Command （? <span class="keyword">for</span> <span class="built_in">help</span>）:</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>示例</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 /]# gdisk /dev/vda</span><br><span class="line">Command （? <span class="keyword">for</span> <span class="built_in">help</span>）: p</span><br><span class="line">Number  Start （sector）    End （sector）  Size       Code  Name   </span><br><span class="line">1            2048            6143   	 2.0 MiB     EF02    </span><br><span class="line">2            6144         2103295   	1024.0 MiB   0700   </span><br><span class="line">3         2103296        65026047   	 30.0 GiB    8E00</span><br><span class="line"><span class="comment"># 找出最后一个 sector 的号码</span></span><br><span class="line">Command （? <span class="keyword">for</span> <span class="built_in">help</span>）: ?  <span class="comment"># 查一下增加分区的指令为何</span></span><br><span class="line">Command （? <span class="keyword">for</span> <span class="built_in">help</span>）: n  <span class="comment"># 开始新增的行为</span></span><br><span class="line">Partition number （4-128, default 4）: 4  <span class="comment"># 默认就是 4 号，直接 enter 即可</span></span><br><span class="line">First sector （34-83886046, default = 65026048） or &#123;+-&#125;size&#123;KMGTP&#125;: 65026048  <span class="comment"># 默认是上个分区的最后一个扇区 + 1，直接enter</span></span><br><span class="line">Last sector （65026048-83886046, default = 83886046） or &#123;+-&#125;size&#123;KMGTP&#125;: +1G</span><br><span class="line"><span class="comment"># 不需要自己去计算扇区号码，通过 +容量的这个方式，就可以让 gdisk 算出最接近你需要的容量的扇区号码</span></span><br><span class="line"></span><br><span class="line">Current <span class="built_in">type</span> is <span class="string">&#x27;Linux filesystem&#x27;</span></span><br><span class="line">Hex code or GUID （L to show codes, Enter = 8300）: <span class="comment"># 使用默认值即可～直接 enter</span></span><br><span class="line"><span class="comment"># 这里让你选择未来这个分区预计使用的文件系统！默认都是 Linux 文件系统的 8300（可以使用-l查看）</span></span><br></pre></td></tr></table></figure>
+
+<p>输入<code>w</code>保存后，由于Linux正在使用这颗磁盘，担心系统出问题，所以分区表不会进行更新，可以重启或者通过 <code>partprobe </code>指令来处理</p>
+<h5 id="partprobe-更新-Linux-核心的分区表信息"><a href="#partprobe-更新-Linux-核心的分区表信息" class="headerlink" title="partprobe 更新 Linux 核心的分区表信息"></a>partprobe 更新 Linux 核心的分区表信息</h5><p><code>partprobe -s</code></p>
+<h4 id="fdisk"><a href="#fdisk" class="headerlink" title="fdisk"></a>fdisk</h4><p>跟gdisk差不多</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 /]# fdisk /dev/sda</span><br><span class="line">Command （m <span class="keyword">for</span> <span class="built_in">help</span>）: m   <span class="comment"># 输入 m 后，就会看到下面这些指令介绍</span></span><br><span class="line">Command action   </span><br><span class="line">a   toggle a bootable flag   </span><br><span class="line">b   edit bsd disklabel   </span><br><span class="line">c   toggle the dos compatibility flag   </span><br><span class="line">d   delete a partition   <span class="comment">#删除一个partition   </span></span><br><span class="line">l   list known partition types   </span><br><span class="line">m   <span class="built_in">print</span> this menu   </span><br><span class="line">n   add a new partition  <span class="comment"># 新增一个partition   </span></span><br><span class="line">o   create a new empty DOS partition table   </span><br><span class="line">p   <span class="built_in">print</span> the partition table     <span class="comment"># 在屏幕上显示分区表   </span></span><br><span class="line">q   quit without saving changes   <span class="comment"># 不储存离开fdisk程序   </span></span><br><span class="line">s   create a new empty Sun disklabel   </span><br><span class="line">t   change a partition<span class="string">&#x27;s system id   </span></span><br><span class="line"><span class="string">u   change display/entry units   </span></span><br><span class="line"><span class="string">v   verify the partition table   </span></span><br><span class="line"><span class="string">w   write table to disk and exit  # 将刚刚的动作写入分区表   </span></span><br><span class="line"><span class="string">x   extra functionality （experts only）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="磁盘格式化（创建文件系统）"><a href="#磁盘格式化（创建文件系统）" class="headerlink" title="磁盘格式化（创建文件系统）"></a>磁盘格式化（创建文件系统）</h3><p>格式化的指令<code>makefilesystem, mkfs</code>，这是个综合的指令，它会去调用正确的<strong>文件系统格式化工具</strong>软件。<strong>格式化</strong>应该称为创建文件系统（make filesystem）才对！</p>
+<p>创建 xfs 文件系统，使用 <code>mkfs.xfs</code> 指令，<code>mkfs.xfs /dev/vda4</code></p>
+<p>创建ext4文件系统，使用<code>mkfs.ext4</code>指令，<code>mkfs.ext4 /dev/vda5</code></p>
+<ul>
+<li>查看支持哪些mkfs指令</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 ~]# mkfs[Tab][Tab]</span><br><span class="line">mkfs         mkfs.cramfs  mkfs.ext2    mkfs.ext3    mkfs.ext4    mkfs.minix   mkfs.xfs</span><br></pre></td></tr></table></figure>
+
+<h3 id="文件系统检验"><a href="#文件系统检验" class="headerlink" title="文件系统检验"></a>文件系统检验</h3><h4 id="xfs-repair-处理-XFS-文件系统"><a href="#xfs-repair-处理-XFS-文件系统" class="headerlink" title="xfs_repair 处理 XFS 文件系统"></a>xfs_repair 处理 XFS 文件系统</h4><p>当有 xfs 文件系统错乱才需要使用这个指令 <code>xfs_repair [-fnd] 设备名称</code>，修复时需要先卸载设备，如果时根目录有问题，就要进入<strong>单人维护或救援模式</strong>，然后通过 <code>-d</code> 这个选项来处理</p>
+<h4 id="fsck-ext4-处理-EXT4-文件系统"><a href="#fsck-ext4-处理-EXT4-文件系统" class="headerlink" title="fsck.ext4 处理 EXT4 文件系统"></a>fsck.ext4 处理 EXT4 文件系统</h4><p>fsck 是个<strong>综合指令</strong>，针对 ext4 建议直接使用 fsck.ext4 来检测，<code>fsck.ext4 [-pf] [-b superblock] 设备名称</code></p>
+<blockquote>
+<p>通常只有 root 且文件系统有问题的时候才使用这个指令，在正常状况下使用，可能会造成对系统的危害！</p>
+<p>通常使用这个指令的场合都是在系统出现极大的问题，导致你在 Linux 开机的时候得进入单人单机模式下进行维护的行为时，才必须使用此一指令</p>
+</blockquote>
+<h3 id="文件系统挂载与卸载"><a href="#文件系统挂载与卸载" class="headerlink" title="文件系统挂载与卸载"></a>文件系统挂载与卸载</h3><h4 id="文件挂载：mount"><a href="#文件挂载：mount" class="headerlink" title="文件挂载：mount"></a>文件挂载：mount</h4><p>前面提到挂载点是目录，而这个目录是进入磁盘分区（文件系统）的入口</p>
+<p>不过要进行挂载前最好先确定几件事：</p>
+<ol>
+<li>单一文件系统不应该被重复挂载在不同的挂载点（目录）中</li>
+<li>单一目录不应该重复挂载多个文件系统</li>
+<li>要作为挂载点的目录，理论上应该都是空目录</li>
+</ol>
+<p><strong>注意：如果挂载的目录里面不是空的，那么挂载了文件系统之后，原目录下的东西就会暂时消失，等到新分区被卸载之后才会出现</strong></p>
+<blockquote>
+<p> 举个例子，假设你的 &#x2F;home 原本与根目录（&#x2F;）在同一个文件系统中，下面原本就有 &#x2F;home&#x2F;test 与 &#x2F;home&#x2F;vbird 两个目录。然后你想要加入新的磁盘，并且直接挂载 &#x2F;home 下面，那么当你挂载上新的分区时，则 &#x2F;home 目录显示的是新分区内的数据，至于原先的 test 与 vbird 这两个目录就会暂时的被<strong>隐藏</strong>掉了。等到新分区被卸载之后，则 &#x2F;home 原本的内容就会再次出现！</p>
+</blockquote>
+<p>而要将文件系统挂载到我们的 Linux 系统上，就要使用 <code>mount</code> 这个指令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@172-12-0-1 ~]# mount -a</span><br><span class="line">[root@172-12-0-1 ~]# mount [-l]</span><br><span class="line">[root@172-12-0-1 ~]# mount [-t 文件系统] LABEL=<span class="string">&#x27;&#x27;</span>  挂载点</span><br><span class="line">[root@172-12-0-1 ~]# mount [-t 文件系统] UUID=<span class="string">&#x27;&#x27;</span>   挂载点</span><br><span class="line">[root@172-12-0-1 ~]# mount [-t 文件系统] 设备文件名挂载点</span><br><span class="line">选项与参数：</span><br><span class="line">-a  ：依照配置文件 [/etc/fstab](../Text/index.html#fstab) 的数据将所有未挂载的磁盘都挂载上来</span><br><span class="line">-l  ：单纯的输入 mount 会显示目前挂载的信息。加上 -l 可增列 Label 名称</span><br><span class="line">-t  ：可以加上文件系统种类来指定欲挂载的类型。常见的 Linux 支持类型有：xfs, ext3, ext4</span><br><span class="line">-n  ：在默认的情况下，系统会将实际挂载的情况实时写入 /etc/mtab 中，以利其他程序的运行。但在某些情况下（例如单人维护模式）为了避免问题会刻意不写入。此时就得要使用 -n 选项</span><br><span class="line">-o  ：后面可以接一些挂载时额外加上的参数！比方说帐号、密码、读写权限等：</span><br><span class="line">	async, <span class="built_in">sync</span>:   此文件系统是否使用同步写入（<span class="built_in">sync</span>）或非同步（默认）（async）的内存机制</span><br><span class="line">	atime,noatime: 是否修订文件的读取时间（atime）。为了性能，某些时刻可使用 noatime</span><br><span class="line">    ro, rw:        挂载文件系统成为只读（ro）或可读写（rw）</span><br><span class="line">    auto, noauto:  允许此 filesystem 被以 mount -a 自动挂载（auto）</span><br><span class="line">    dev, nodev:    是否允许此 filesystem 上，可创建设备文件？ dev 为可允许</span><br><span class="line">    suid, nosuid:  是否允许此 filesystem 含有 suid/sgid 的文件格式？</span><br><span class="line">    <span class="built_in">exec</span>, noexec:  是否允许此 filesystem 上拥有可执行 binary 文件？</span><br><span class="line">    user, nouser:  是否允许此 filesystem 让任何使用者执行 mount ？一般来说，                     					 mount 仅有 root 可以进行，但下达 user 参数，则可让一般 user 也能够对此 						   partition 进行 mount 。</span><br><span class="line">    defaults:      默认值为：rw, suid, dev, <span class="built_in">exec</span>, auto, nouser, and async</span><br><span class="line">    remount:       重新挂载，这在系统出错，或重新更新参数时，很有用！</span><br></pre></td></tr></table></figure>
+
+<p>CentOS 7 以后不需要加上 <code>-t</code> 这个选项，系统会自动的分析最恰当的文件系统来尝试挂载你需要的设备，这也是使用 <code>blkid</code> 就能够正确显示文件系统的原因！</p>
+<blockquote>
+<p>CentOS 是怎么找出文件系统类型的呢？</p>
+<p>由于文件系统几乎都有 <code>superblock</code> ，Linux 可以通过分析 <code>superblock</code> 搭配 Linux 自己的驱动程序去测试挂载，如果成功，就使用该类型的文件系统挂载！</p>
+</blockquote>
+<blockquote>
+<p>那么系统有没有指定哪些类型的<code>filesystem</code> 才需要进行上述的挂载测试呢？</p>
+<p>主要是参考下面这两个文件</p>
+<ul>
+<li>&#x2F;etc&#x2F;filesystems：<strong>系统指定的测试挂载文件系统类型的优先顺序</strong></li>
+<li>&#x2F;proc&#x2F;filesystems：<strong>Linux系统已经载入的文件系统类型</strong></li>
+</ul>
+</blockquote>
+<blockquote>
+<p>那我怎么知道我的 Linux 有没有相关文件系统类型的驱动程序呢？</p>
+<p>Linux 支持的文件系统之驱动程序都写在如下的目录中</p>
+<ul>
+<li>&#x2F;lib&#x2F;modules&#x2F;$（uname -r）&#x2F;kernel&#x2F;fs&#x2F;</li>
+</ul>
+</blockquote>
+<p>将某个目录挂载到其他目录，也可以使用 symbolic link 来链接，不过在某些不支持符号链接的程序运行中，还是得要通过这样的方法才行，<code>mount --bind /var /data/var</code></p>
+<h4 id="卸载-umount"><a href="#卸载-umount" class="headerlink" title="卸载:umount"></a>卸载:umount</h4><p>将设备文件卸载，<code>umount 设备或挂载点</code></p>
+<h3 id="磁盘-文件系统参数修订"><a href="#磁盘-文件系统参数修订" class="headerlink" title="磁盘&#x2F;文件系统参数修订"></a>磁盘&#x2F;文件系统参数修订</h3><p>有时你可能只是希望修改一下目前文件系统的一些<strong>相关信息</strong>（例如Label name ， journal 的参数），这个时候，就得需要下面这些相关的指令功能：</p>
+<ul>
+<li><p>mknod</p>
+<p>在 Linux 下面所有的设备都以文件表示，通过文件的 major 与 minor 数值来表示，<code>mknod 设备文件名 [bcp] [Major] [Minor]</code></p>
+</li>
+<li><p>xfs_admin 修改 XFS 文件系统的 UUID 与 Label name</p>
+<p>如果格式化的时候忘记加上标头名称，后来想要再次加入时，不需要重复格式化！直接使用这个 xfs_admin 即可。这个指令直接拿来处理 LABEL name 以及 UUID 即可</p>
+</li>
+<li></li>
+</ul>
 <p>九、文件与文件系统的压缩、打包与备份</p>
 <p>十、Vim程序编辑器</p>
 <p>十一、认识与学习BASH</p>
