@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Linux入门 | DrJuly</title><meta name="author" content="DrJuly2333"><meta name="copyright" content="DrJuly2333"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="[TOC]  1、tee和cat使用EOF往文件中添加内容cat 覆盖：要写入的文件可以放在中间或最后  格式一 123cat &lt;&lt; EOF &gt; &#x2F;test&#x2F;test.txtHello World!EOF  格式二 123cat &gt; &#x2F;test&#x2F;test.txt &lt;&lt;EOFHello World!EOF   追加：追加的写法基本和覆盖一样，不同的是单重定向号变成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux入门">
+<meta property="og:url" content="http://example.com/2024/08/05/Linux%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="DrJuly">
+<meta property="og:description" content="[TOC]  1、tee和cat使用EOF往文件中添加内容cat 覆盖：要写入的文件可以放在中间或最后  格式一 123cat &lt;&lt; EOF &gt; &#x2F;test&#x2F;test.txtHello World!EOF  格式二 123cat &gt; &#x2F;test&#x2F;test.txt &lt;&lt;EOFHello World!EOF   追加：追加的写法基本和覆盖一样，不同的是单重定向号变成">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/avatar.png">
+<meta property="article:published_time" content="2024-08-05T18:33:56.000Z">
+<meta property="article:modified_time" content="2024-08-05T09:59:36.000Z">
+<meta property="article:author" content="DrJuly2333">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/avatar.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/08/05/Linux%E5%85%A5%E9%97%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?95d98ba73784092d75263482b3e4ecc4";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux入门',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-05 05:59:36'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-double-row-display@1.00/cardlistpost.min.css"/>
+<style>#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags:before {content:"\A";
+  white-space: pre;}#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags > .article-meta__separator{display:none}</style>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="DrJuly"><span class="site-name">DrJuly</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Linux入门</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-08-05T18:33:56.000Z" title="Created 2024-08-05 14:33:56">2024-08-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-08-05T09:59:36.000Z" title="Updated 2024-08-05 05:59:36">2024-08-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading Time:</span><span>5mins</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux入门"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>[TOC] </p>
+<h3 id="1、tee和cat使用EOF往文件中添加内容"><a href="#1、tee和cat使用EOF往文件中添加内容" class="headerlink" title="1、tee和cat使用EOF往文件中添加内容"></a>1、<code>tee</code>和<code>cat</code>使用<code>EOF</code>往文件中添加内容</h3><h4 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h4><ul>
+<li><p>覆盖：要写入的文件可以放在<strong>中间或最后</strong></p>
+<ol>
+<li><p>格式一</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> &lt;&lt; <span class="hljs-string">EOF &gt; /test/test.txt</span><br><span class="hljs-string">Hello World!</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>格式二</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> &gt; /test/test.txt &lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string">Hello World!</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li><p>追加：追加的写法基本和覆盖一样，不同的是单重定向号变成<code>双重定向号</code></p>
+<ol>
+<li><p>格式一</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> &lt;&lt; <span class="hljs-string">EOF &gt;&gt; /test/test.txt</span><br><span class="hljs-string">Hello World 1!</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>格式二</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> &gt;&gt; /test/test.txt &lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string">Hello World 1!</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p>不论是覆盖还是追加，在涉及到变量操作时是需要进行转义的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> &lt;&lt;<span class="hljs-string">EOF &gt;&gt; /test/a.txt</span><br><span class="hljs-string">PATH=\$PATH:\$HOME/bin</span><br><span class="hljs-string">export ORACLE_BASE=/u01/app/oracle</span><br><span class="hljs-string">export ORACLE_HOME=\$ORACLE_BASE/10.2.0/db_1</span><br><span class="hljs-string">export ORACLE_SID=yqpt</span><br><span class="hljs-string">export PATH=\$PATH:\$ORACLE_HOME/bin</span><br><span class="hljs-string">export NLS_LANG=&quot;AMERICAN_AMERICA.AL32UTF8&quot;</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="tee"><a href="#tee" class="headerlink" title="tee"></a>tee</h4><p>语法:</p>
+<blockquote>
+<p><code>tee [-ai][--help][--version][文件...]</code></p>
+</blockquote>
+<p>参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">-a 或 --append 　				 附加到既有文件的后面，而非覆盖它．<br>-i 或 --ignore-interrupts 　	 忽略中断信号。<br>--<span class="hljs-built_in">help</span> 　				 	  在线帮助。<br>--version 　				 	  显示版本信息。<br></code></pre></td></tr></table></figure>
+
+<p>使用指令 <code>tee</code> 将用户输入的数据同时保存到文件 <code>file1</code> 和 <code>file2</code> 中，输入如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 在两个文件中复制内容</span><br>$ <span class="hljs-built_in">tee</span> file1 file2<br><span class="hljs-comment"># 输入需要保存到文件的数据</span><br>Test <span class="hljs-built_in">tee</span> <span class="hljs-comment">#提示用户输入数据</span><br>Test <span class="hljs-built_in">tee</span> <span class="hljs-comment">#输出数据，进行输出反馈</span><br><span class="hljs-comment"># Ctrl + C退出</span><br><span class="hljs-comment"># 验证是否写入成功</span><br>$ <span class="hljs-built_in">cat</span> file1 file2<br></code></pre></td></tr></table></figure>
+
+<h3 id="2、使用-cat-命令结合重定向可以在指定位置写入内容"><a href="#2、使用-cat-命令结合重定向可以在指定位置写入内容" class="headerlink" title="2、使用 cat 命令结合重定向可以在指定位置写入内容"></a>2、使用 <code>cat</code> 命令结合重定向可以在指定位置写入内容</h3><blockquote>
+<p><strong>备份原文件</strong></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ <span class="hljs-built_in">cp</span> filename.txt filename_backup.txt<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li><h4 id="使用-head-和-tail-命令结合重定向"><a href="#使用-head-和-tail-命令结合重定向" class="headerlink" title="使用 head 和 tail 命令结合重定向"></a><strong>使用 <code>head</code> 和 <code>tail</code> 命令结合重定向</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 将文件的前5行输出到临时文件temp.txt中</span><br>$ <span class="hljs-built_in">head</span> -n 5 filename.txt &gt; temp.txt<br><br><span class="hljs-comment"># 在temp.txt中添加要插入的内容</span><br>$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;New content to insert&quot;</span> &gt;&gt; temp.txt<br><br><span class="hljs-comment"># 将文件剩余的内容（即第6行到文件末尾）追加到temp.txt中</span><br>$ <span class="hljs-built_in">tail</span> -n +6 filename.txt &gt;&gt; temp.txt<br><br><span class="hljs-comment"># 将temp.txt内容覆盖到原始文件filename.txt</span><br>$ <span class="hljs-built_in">mv</span> temp.txt filename.txt<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用 <code>sed</code> 命令</strong></p>
+<p><code>sed</code> 命令可以用于流编辑，可以直接在指定的行后插入内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ sed <span class="hljs-string">&#x27;5a\</span><br><span class="hljs-string">New content to insert</span><br><span class="hljs-string">&#x27;</span> filename.txt &gt; temp.txt &amp;&amp; <span class="hljs-built_in">mv</span> temp.txt filename.txt<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用 <code>awk</code> 命令</strong></p>
+<p><code>awk</code> 可以用于处理文本文件，可以通过它在指定行后插入内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ awk <span class="hljs-string">&#x27;NR==5 &#123;print &quot;New content to insert&quot;&#125; 1&#x27;</span> filename.txt &gt; temp.txt &amp;&amp; <span class="hljs-built_in">mv</span> temp.txt filename.txt<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用 <code>ed</code> 命令</strong></p>
+<p><code>ed</code> 是一个文本编辑器，可以在不打开文件的情况下直接编辑文件内容，适合于批处理脚本中的文件操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 验证安装</span><br>$ ed --version<br><br><span class="hljs-comment"># 安装 ed</span><br>$ <span class="hljs-built_in">sudo</span> yum install ed     <span class="hljs-comment"># 如果使用的是 CentOS 7 或更早版本</span><br>或<br>$ <span class="hljs-built_in">sudo</span> dnf install ed     <span class="hljs-comment"># 如果使用的是 CentOS 8 或更新版本</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ ed -s filename.txt &lt;&lt; <span class="hljs-string">EOF</span><br><span class="hljs-string">5a</span><br><span class="hljs-string">New content to insert</span><br><span class="hljs-string">.</span><br><span class="hljs-string">w</span><br><span class="hljs-string">q</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="3、sed"><a href="#3、sed" class="headerlink" title="3、sed"></a>3、<code>sed</code></h3><p><code>sed</code>（Stream Editor）是一个非常强大的流式文本编辑工具，它主要用于对文本流进行编辑、转换和过滤。</p>
+<p>以下是一些 <code>sed</code> 命令的常用操作和示例：</p>
+<ol>
+<li><h4 id="替换文本："><a href="#替换文本：" class="headerlink" title="替换文本："></a><strong>替换文本</strong>：</h4><p>使用 <code>s</code> 命令可以在文本中进行<strong>替换</strong>操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 在文件中将所有的 &quot;old_text&quot; 替换为 &quot;new_text&quot;</span><br><span class="hljs-comment"># 不保存</span><br>$ sed <span class="hljs-string">&#x27;s/old_text/new_text/g&#x27;</span> filename.txt<br><span class="hljs-comment"># 保存修改</span><br>$ sed -i <span class="hljs-string">&#x27;s/old_text/new_text/g&#x27;</span> filename.txt<br><br><span class="hljs-comment"># 仅替换每行的第一个匹配</span><br>$ sed -i <span class="hljs-string">&#x27;s/old_text/new_text/&#x27;</span> filename.txt<br></code></pre></td></tr></table></figure>
+</li>
+<li><h4 id="删除行："><a href="#删除行：" class="headerlink" title="删除行："></a><strong>删除行</strong>：</h4><p>使用 <code>d</code> 命令可以删除匹配的行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 删除包含特定文本的行</span><br><span class="hljs-comment"># sed &#x27;/pattern_to_delete/d&#x27; filename.txt</span><br><span class="hljs-comment"># 删除文件 `filename.txt` 中包含单词 &quot;example&quot; 的所有行</span><br>$ sed -i <span class="hljs-string">&#x27;/example/d&#x27;</span> filename.txt<br><span class="hljs-comment"># 删除文件 `filename.txt` 中所有以 &quot;pattern&quot; 开头的行</span><br>$ sed -i <span class="hljs-string">&#x27;/^pattern/d&#x27;</span> filename.txt<br><span class="hljs-comment"># 删除文件 `filename.txt` 中所有空白行（只包含空格或制表符的行）</span><br>$ sed -i <span class="hljs-string">&#x27;/^\s*$/d&#x27;</span> filename.txt<br><span class="hljs-comment"># 删除文件 `filename.txt` 中所有以 &quot;start_with&quot; 开头的行</span><br>$ sed -i <span class="hljs-string">&#x27;/^start_with/d&#x27;</span> filename.txt<br><span class="hljs-comment"># 删除文件 `filename.txt` 中包含任何数字的所有行：</span><br>$ sed -i <span class="hljs-string">&#x27;/[0-9]/d&#x27;</span> filename.txt<br><br><span class="hljs-comment"># 删除第 N 行</span><br>$ sed -i <span class="hljs-string">&#x27;Nd&#x27;</span> filename.txt<br></code></pre></td></tr></table></figure>
+</li>
+<li><h4 id="插入和追加行："><a href="#插入和追加行：" class="headerlink" title="插入和追加行："></a><strong>插入和追加行</strong>：</h4><p>使用 <code>i</code> 命令插入行，在指定行之前插入内容；</p>
+<p>使用 <code>a</code> 命令追加行，在指定行之后追加内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 在第 N 行前插入内容</span><br>sed -i <span class="hljs-string">&#x27;Ni\</span><br><span class="hljs-string">This is the new line&#x27;</span> filename.txt<br><br><span class="hljs-comment"># 在第 N 行后追加内容</span><br>sed -i <span class="hljs-string">&#x27;Na\</span><br><span class="hljs-string">This is the new line&#x27;</span> filename.txt<br></code></pre></td></tr></table></figure>
+</li>
+<li><h4 id="打印行："><a href="#打印行：" class="headerlink" title="打印行："></a><strong>打印行</strong>：</h4><p>使用 <code>p</code> 命令可以打印匹配的行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 打印包含特定文本的行</span><br>sed -n <span class="hljs-string">&#x27;/pattern_to_print/p&#x27;</span> filename.txt<br><br><span class="hljs-comment"># 打印特定行号的内容</span><br>sed -n <span class="hljs-string">&#x27;Np&#x27;</span> filename.txt<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>选定行范围</strong>：</p>
+<p>使用起始行号和结束行号，可以选定一个行范围进行操作。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 打印从第 N 行到第 M 行之间的内容</span><br>sed -n <span class="hljs-string">&#x27;N,Mp&#x27;</span> filename.txt<br><br><span class="hljs-comment"># 删除从第 N 行到第 M 行之间的内容</span><br>sed <span class="hljs-string">&#x27;N,Md&#x27;</span> filename.txt<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>保存修改</strong>：</p>
+<p>默认情况下，<code>sed</code> 命令只是在屏幕上显示修改后的内容，并不会修改原始文件。</p>
+<p>要将修改保存回原始文件，可以使用重定向操作符结合 <code>-i</code> 选项（原地修改）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 将修改后的内容保存回原始文件</span><br>sed -i <span class="hljs-string">&#x27;s/old_text/new_text/g&#x27;</span> filename.txt<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>多个命令组合</strong>：</p>
+<p>可以使用分号 <code>;</code> 将多个 <code>sed</code> 命令组合在一起，依次应用于每行文本。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 将同时执行多个操作：删除包含 &quot;pattern&quot; 的行，将 &quot;old_text&quot; 替换为 &quot;new_text&quot;，并在第 N 行前插入新内容</span><br>sed <span class="hljs-string">&#x27;/pattern/d; s/old_text/new_text/g; Ni\</span><br><span class="hljs-string">New line to insert&#x27;</span> filename.txt<br></code></pre></td></tr></table></figure></li>
+</ol>
+<p>这些是 <code>sed</code> 命令的一些常见用法示例，<code>sed</code> 的功能非常强大，可以通过组合不同的命令和选项来满足各种文本处理需求。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">DrJuly2333</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2024/08/05/Linux%E5%85%A5%E9%97%A8/">http://example.com/2024/08/05/Linux%E5%85%A5%E9%97%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post_share"><div class="social-share" data-image="/img/avatar.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/08/10/%E9%B8%9F%E5%93%A5%E7%9A%84Linux%E7%A7%81%E6%88%BF%E8%8F%9C%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" title="鸟哥的Linux实战阅读笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">鸟哥的Linux实战阅读笔记</div></div></a></div><div class="next-post pull-right"><a href="/2024/07/30/MiniKube%E5%AE%9E%E6%88%98/" title="Kubernetes实战"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">Kubernetes实战</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2024/08/10/%E9%B8%9F%E5%93%A5%E7%9A%84Linux%E7%A7%81%E6%88%BF%E8%8F%9C%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" title="鸟哥的Linux实战阅读笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-10</div><div class="title">鸟哥的Linux实战阅读笔记</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DrJuly2333</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/DrJuly2333" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:HTTTS2022@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">欢迎光临小站，这里是我日常收集和整理的总结，希望能对您有所帮助：）<br/><br/>本站的内容经过个人加工总结而来，也参考了网友们分享的资料，如有侵权，请第一时间联系我，我将及时进行修改和删除</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81tee%E5%92%8Ccat%E4%BD%BF%E7%94%A8EOF%E5%BE%80%E6%96%87%E4%BB%B6%E4%B8%AD%E6%B7%BB%E5%8A%A0%E5%86%85%E5%AE%B9"><span class="toc-number">1.</span> <span class="toc-text">1、tee和cat使用EOF往文件中添加内容</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#cat"><span class="toc-number">1.1.</span> <span class="toc-text">cat</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#tee"><span class="toc-number">1.2.</span> <span class="toc-text">tee</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E4%BD%BF%E7%94%A8-cat-%E5%91%BD%E4%BB%A4%E7%BB%93%E5%90%88%E9%87%8D%E5%AE%9A%E5%90%91%E5%8F%AF%E4%BB%A5%E5%9C%A8%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E5%86%99%E5%85%A5%E5%86%85%E5%AE%B9"><span class="toc-number">2.</span> <span class="toc-text">2、使用 cat 命令结合重定向可以在指定位置写入内容</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-head-%E5%92%8C-tail-%E5%91%BD%E4%BB%A4%E7%BB%93%E5%90%88%E9%87%8D%E5%AE%9A%E5%90%91"><span class="toc-number">2.1.</span> <span class="toc-text">使用 head 和 tail 命令结合重定向</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81sed"><span class="toc-number">3.</span> <span class="toc-text">3、sed</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2%E6%96%87%E6%9C%AC%EF%BC%9A"><span class="toc-number">3.1.</span> <span class="toc-text">替换文本：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E8%A1%8C%EF%BC%9A"><span class="toc-number">3.2.</span> <span class="toc-text">删除行：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E5%92%8C%E8%BF%BD%E5%8A%A0%E8%A1%8C%EF%BC%9A"><span class="toc-number">3.3.</span> <span class="toc-text">插入和追加行：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%93%E5%8D%B0%E8%A1%8C%EF%BC%9A"><span class="toc-number">3.4.</span> <span class="toc-text">打印行：</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/10/%E9%B8%9F%E5%93%A5%E7%9A%84Linux%E7%A7%81%E6%88%BF%E8%8F%9C%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" title="鸟哥的Linux实战阅读笔记">鸟哥的Linux实战阅读笔记</a><time datetime="2024-08-10T21:46:35.000Z" title="Created 2024-08-10 17:46:35">2024-08-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/05/Linux%E5%85%A5%E9%97%A8/" title="Linux入门">Linux入门</a><time datetime="2024-08-05T18:33:56.000Z" title="Created 2024-08-05 14:33:56">2024-08-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/30/MiniKube%E5%AE%9E%E6%88%98/" title="Kubernetes实战">Kubernetes实战</a><time datetime="2024-07-30T20:03:35.000Z" title="Created 2024-07-30 16:03:35">2024-07-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/29/Vim%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" title="Vim使用教程">Vim使用教程</a><time datetime="2024-07-29T22:15:32.000Z" title="Created 2024-07-29 18:15:32">2024-07-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/24/Java%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/" title="JAVA工作总结和面试">JAVA工作总结和面试</a><time datetime="2024-07-24T13:15:32.000Z" title="Created 2024-07-24 09:15:32">2024-07-24</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2024 By DrJuly2333</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async src="/js/title.js"></script><script defer src="https://rmt.dogedoge.com/fetch/~/source/jsdelivr/npm/jquery@latest/dist/jquery.min.js"></script><script defer data-pjax src="https://cdn.jsdelivr.net/gh/sirxemic/jquery.ripples/dist/jquery.ripples.js"></script><script defer data-pjax src="/js/ripples.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>DrJuly</title><meta name="author" content="DrJuly2333"><meta name="copyright" content="DrJuly2333"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+<meta property="og:title" content="DrJuly">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="DrJuly">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/avatar.png">
+<meta property="article:author" content="DrJuly2333">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/avatar.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?95d98ba73784092d75263482b3e4ecc4";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'DrJuly',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2024-09-12 16:05:46'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-double-row-display@1.00/cardlistpost.min.css"/>
+<style>#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags:before {content:"\A";
+  white-space: pre;}#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags > .article-meta__separator{display:none}</style>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background: transparent"><nav id="nav"><span id="blog-info"><a href="/" title="DrJuly"><span class="site-name">DrJuly</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">DrJuly</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/DrJuly2333" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:HTTTS2022@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/08/10/%E9%B8%9F%E5%93%A5%E7%9A%84Linux%E7%A7%81%E6%88%BF%E8%8F%9C%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" title="鸟哥的Linux实战阅读笔记">鸟哥的Linux实战阅读笔记</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-08-10T21:46:35.000Z" title="Created 2024-08-10 17:46:35">2024-08-10</time></span></div><div class="content">[TOC] 
+一、计算机概论计算机：接受输入指令与数据，经由中央处理器的数学与逻辑单元运算处理后，以产生或储存成有用的信息。
+计算机由五个主要单元所组成的，包括输入单元、输出单元、CPU 内部的控制单元、算数逻辑单元与内存五大部分。
+重点在于中央处理器（Central Processing Unit,  CPU），CPU 为一个具有特定功能的芯片，里头含有微指令集。
+CPU 的工作主要在于管理与运算，因此在CPU 内又可分为两个主要的单元：算数逻辑单元与控制单元。
+
+算数逻辑单元：主要负责程序运算与逻辑判断
+控制单元：协调各周边元件与各单元间的工作。
+
+CPU 读取的数据都是从内存来的，内存内的数据则是从输入单元所传输进来！而 CPU 处理完毕的数据也必须要先写回内存中，最后数据才从内存传输到输出单元。
+12345graph LR	输入输出设备 --输入--&gt; 内存	内存 --读取--&gt; CPU	CPU --传输--&gt; 内存	内存 --输出--&gt; 输入输出设备
+
+
+
+
+
+CPU 架构主要有两种 CPU 架构，分别是：精简指令集（RISC）与复杂指令集（CISC） ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/08/05/Linux%E5%85%A5%E9%97%A8/" title="Linux入门">Linux入门</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-08-05T18:33:56.000Z" title="Created 2024-08-05 14:33:56">2024-08-05</time></span></div><div class="content">[TOC] 
+1、tee和cat使用EOF往文件中添加内容cat
+覆盖：要写入的文件可以放在中间或最后
+
+格式一
+123cat &lt;&lt; EOF &gt; /test/test.txtHello World!EOF
+
+格式二
+123cat &gt; /test/test.txt &lt;&lt;EOFHello World!EOF
+
+
+追加：追加的写法基本和覆盖一样，不同的是单重定向号变成双重定向号
+
+格式一
+123cat &lt;&lt; EOF &gt;&gt; /test/test.txtHello World 1!EOF
+
+格式二
+123cat &gt;&gt; /test/test.txt &lt;&lt;EOFHello World 1!EOF
+
+
+
+
+不论是覆盖还是追加，在涉及到变量操作时是需要进行转义的
+12345678cat &lt;&lt;EOF &gt;&gt; /test/a.txtPATH=\$PATH:\$HOME/binexport ORACLE_BASE=/u01/app/oracleexport ORACLE_HOME=\$ORACLE_BAS ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/07/30/MiniKube%E5%AE%9E%E6%88%98/" title="Kubernetes实战">Kubernetes实战</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-07-30T20:03:35.000Z" title="Created 2024-07-30 16:03:35">2024-07-30</time></span></div><div class="content">[TOC] 
+前置工作1、卸载宝塔面板（可选）1234下载脚本wget http://download.bt.cn/install/bt-uninstall.sh执行脚本sh bt-uninstall.sh
+
+2、安装docker
+先删除本机旧的或者残留的docker
+
+12345678sudo yum remove docker \                docker-client \                docker-client-latest \                docker-common \                docker-latest \                docker-latest-logrotate \                docker-logrotate \                docker-engine
+
+
+安装依赖
+
+1sudo yum update -y &amp;&amp; sudo yum install -y yum-utils device-mapper-persistent-da ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/07/29/Vim%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" title="Vim使用教程">Vim使用教程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-07-29T22:15:32.000Z" title="Created 2024-07-29 18:15:32">2024-07-29</time></span></div><div class="content">[TOC] 
+Vim使用教程简介一款高度可配置的文本编辑器。
+Vim模式1、常规模式启动编辑器时默认就处于此模式，以下是一些可以在常规模式下使用到的基本命令：
+
+移动：
+方向键
+h ：左
+l  ：右
+j  ：下
+k ：上
+
+
+插入：
+i ：在光标处插入文本
+a ：在光标后插入文本
+A ：在行尾开始插入文本
+I ： 在行首插入文本
+o ：在当前行后插入一个新行
+O ：在当前行前插入一个新行
+
+
+删除：
+x ：删除光标处的文本
+X ：删除光标前的一个文本，相当于BackSpace键
+
+
+修改：
+r ：替换光标处文本
+R ：使用寄存器替换光标处文本，可以修改光标后的文本，相当于Insert键
+
+
+复制和粘贴：
+yy ：将文本剪切到剪贴板
+Y：将一行文本剪切到剪贴板
+p ：在当前行前粘贴剪贴板的文本
+P：在当前行后粘贴剪贴板的文本
+
+
+其他：
+. ：重复上一个命令
+$ ：移至行尾
+^ ：移至行首
+
+
+
+
+
+2、可视模式按v键进入可视模式，以下是在可视模式中可以使用的一些基本命令：
+
+选择：
+方向键
+h：左
+l：右
+j：下
+k：上
+V：选择行
+v：选择字符
+
+
+删除：
+x ：删除选定的文本
+X  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/07/24/Java%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/" title="JAVA工作总结和面试">JAVA工作总结和面试</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-07-24T13:15:32.000Z" title="Created 2024-07-24 09:15:32">2024-07-24</time></span></div><div class="content">[TOC] 
+
+本文内容参考：https://github.com/whx123/JavaHome
+
+if-else代码优化优化方案一：提前return，去除不必要的else优化前：
+12345if (condition) &#123;    //doSomething&#125; else &#123;    return;&#125;
+优化后：
+1234if（!condition）&#123;    return;&#125;//doSomething
+
+优化方案二：使用条件三目运算符优化前：
+123456int price;if (condition) &#123;    price = 80;&#125; else &#123;    price = 100;&#125;
+优化后：
+1int price = condition ? 80 : 100;
+
+
+优化方案三：使用枚举优化前：
+123456789String OrderStatusDes;if (orderStatus == 0) &#123;    OrderStatusDes = &quot;订单未支付&quot;; ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/07/24/Typora%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" title="Typora使用教程">Typora使用教程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-07-24T13:15:32.000Z" title="Created 2024-07-24 09:15:32">2024-07-24</time></span></div><div class="content">[TOC] 
+一、Typora安装1、下载Typora中文官网：https://typoraio.cn/Typora官网：https://typora.io/releases/all
+2、激活
+用编辑器打开D:\Program Files\Typora\resources\page-dist\static\js\LicenseIndex.180dd4c7.4da8909c.chunk.js，将 e.hasActivated=&quot;true&quot;==e.hasActivated  替换为 e.hasActivated=&quot;true&quot;==&quot;true&quot;
+关闭软件每次启动时的已激活弹窗，用编辑器打开D:\Program Files\Typora\resources\page-dist\license.html，将  &lt;/body&gt;&lt;/html&gt; 替换为 &lt;/body&gt;&lt;script&gt;window.οnlοad=function()&#123;setTimeout(()=&gt;&#123;wind ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DrJuly2333</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/DrJuly2333" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:HTTTS2022@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">欢迎光临小站，这里是我日常收集和整理的总结，希望能对您有所帮助：）<br/><br/>本站的内容经过个人加工总结而来，也参考了网友们分享的资料，如有侵权，请第一时间联系我，我将及时进行修改和删除</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/10/%E9%B8%9F%E5%93%A5%E7%9A%84Linux%E7%A7%81%E6%88%BF%E8%8F%9C%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" title="鸟哥的Linux实战阅读笔记">鸟哥的Linux实战阅读笔记</a><time datetime="2024-08-10T21:46:35.000Z" title="Created 2024-08-10 17:46:35">2024-08-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/05/Linux%E5%85%A5%E9%97%A8/" title="Linux入门">Linux入门</a><time datetime="2024-08-05T18:33:56.000Z" title="Created 2024-08-05 14:33:56">2024-08-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/30/MiniKube%E5%AE%9E%E6%88%98/" title="Kubernetes实战">Kubernetes实战</a><time datetime="2024-07-30T20:03:35.000Z" title="Created 2024-07-30 16:03:35">2024-07-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/29/Vim%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" title="Vim使用教程">Vim使用教程</a><time datetime="2024-07-29T22:15:32.000Z" title="Created 2024-07-29 18:15:32">2024-07-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/24/Java%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/" title="JAVA工作总结和面试">JAVA工作总结和面试</a><time datetime="2024-07-24T13:15:32.000Z" title="Created 2024-07-24 09:15:32">2024-07-24</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/JAVA/" style="font-size: 1.15em; color: rgb(104, 96, 125)">JAVA</a><a href="/tags/Linux/" style="font-size: 1.45em; color: rgb(79, 146, 112)">Linux</a><a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%AD%A6%E4%B9%A0/" style="font-size: 1.15em; color: rgb(187, 48, 177)">微服务学习</a><a href="/tags/%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" style="font-size: 1.45em; color: rgb(99, 10, 151)">软件使用教程</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/08/"><span class="card-archive-list-date">August 2024</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/07/"><span class="card-archive-list-date">July 2024</span><span class="card-archive-list-count">4</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">6</div></div><div class="webinfo-item"><div class="item-name">Total Count :</div><div class="item-count">61.2k</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-09-12T20:05:46.406Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2024 By DrJuly2333</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: (str) => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: (subtitleType) => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        getScript('https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  }
+}
+</script><script>function subtitleType () {
+  if (true) {
+    typedJSFn.init(["欢迎您来到DrJuly2333的小家(❁'◡'❁)","希望您有快乐的一天，也欢迎常来DrJuly2333的小家串串门(●'◡'●)"])
+  } else {
+    document.getElementById("subtitle").textContent = "欢迎您来到DrJuly2333的小家(❁'◡'❁)"
+  }
+}
+typedJSFn.run(subtitleType)</script></div><script async src="/js/title.js"></script><script defer src="https://rmt.dogedoge.com/fetch/~/source/jsdelivr/npm/jquery@latest/dist/jquery.min.js"></script><script defer data-pjax src="https://cdn.jsdelivr.net/gh/sirxemic/jquery.ripples/dist/jquery.ripples.js"></script><script defer data-pjax src="/js/ripples.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
